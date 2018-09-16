@@ -1,0 +1,34 @@
+{
+  "auth": {
+    "clientID": "$ID",
+    "secret": "$SECRET",
+    "token": "$TOKEN",
+    "Port": "$PORT"
+  },
+  "prefs": {
+    "prefix": "!",
+    "playing": "",
+    "version": "6.0α build 1"
+  },
+  "perms": {
+    "whitelistChannels": false,
+    "whitelistedChannels": [
+      "[put a channel ID (not a #channel) here]"
+    ],
+    "blacklistedChannels": [
+      "[put a channel ID (not a #channel) here]"
+    ]
+  },
+  "users": {
+    "roleWhitelist":false,
+    "reportPermissionFailures":false,
+    "blacklistedRoles": [
+      ""
+    ],
+    "adminRoles": [
+      "[put a role id (not a @role) here.]",
+      "if you do not know server role IDs:",
+      "have the owner use the getroles command."
+    ]
+  }
+}
