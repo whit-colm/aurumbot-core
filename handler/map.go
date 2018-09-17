@@ -7,9 +7,10 @@ import (
 	dsg "github.com/bwmarrin/discordgo"
 	"io/ioutil"
 	"plugin"
+	"strings"
 )
 
-var Cmd = map[string]*f.Command{}
+var Cmd = make(map[string]*f.Command)
 
 /* FOR THE PERSON RUNNING THIS BOT: Adding packages to the command list
 * As of now, the bot has no commands set to it so while it may boot up, it
@@ -35,17 +36,29 @@ func init() {
 			}
 		},
 	}
-	_ = reloadPlugins()
+	err := reloadPlugins()
+	if err != nil {
+		dat.Log.Println(err)
+	}
 }
 
 func reloadPlugins() error {
-	files, err := ioutil.ReadDir("./plugins/")
+	var files []string
+	// A painfully complex `ls`
+	filesUnchecked, err := ioutil.ReadDir("./plugins/")
 	if err != nil {
 		dat.Log.Println(err)
 		return err
 	}
+	// Filters out non-.so files (i.e. .DS_Store)
+	for _, file := range filesUnchecked {
+		if strings.HasSuffix(file.Name(), ".so") && !file.IsDir() {
+			files = append(files, file.Name())
+		}
+	}
+
 	for _, module := range files {
-		p, err := plugin.Open("./plugins/" + module.Name())
+		p, err := plugin.Open("./plugins/" + module)
 		if err != nil {
 			dat.Log.Println(err)
 			return err
@@ -55,13 +68,13 @@ func reloadPlugins() error {
 			dat.Log.Println(err)
 			return err
 		}
-		cmds, ok := s.(map[string]*f.Command)
+		cmds, ok := s.(*map[string]*f.Command)
 		if !ok {
 			err := errors.New("Unexpected type from module symbol")
 			dat.Log.Println(err)
 			return err
 		}
-		for key, value := range cmds {
+		for key, value := range *cmds {
 			Cmd[key] = value
 		}
 	}
