@@ -35,7 +35,7 @@ Usage : ` + f.MyBot.Prefs.Prefix + `help -c <command>
 * -ls | Gets a list of available commands given the users perm level
 * -c  | Gets the result for a specific command
  */
-func help(session *dsg.Session, message *dsg.MessageCreate) {
+func help(session *dsg.Session, message *dsg.Message) {
 	msg := strings.Split(message.Content, " ")
 	if len(msg) <= 1 {
 		h := "Help Page Found:\n```" + Cmd["help"].Name + "\n" + Cmd["help"].Help + "```"
@@ -64,11 +64,11 @@ func help(session *dsg.Session, message *dsg.MessageCreate) {
 }
 
 // TODO: Stop making repeat calls via HasPermissions
-func list(session *dsg.Session, message *dsg.MessageCreate) string {
+func list(session *dsg.Session, message *dsg.Message) string {
 	t1 := time.Now()
 	msg := "**Available Commands:**"
 	for command, action := range Cmd {
-		u, err := f.HasPermissions(session, message.Message, message.Author.ID, action.Perms)
+		u, err := f.HasPermissions(session, message, message.Author.ID, action.Perms)
 		if err != nil {
 			dat.Log.Println(err)
 			dat.AlertDiscord(session, message, err)
@@ -84,6 +84,9 @@ func list(session *dsg.Session, message *dsg.MessageCreate) string {
 	return msg
 }
 
+// NOTE: This search function is really inefficent as it makes checks to
+// discord each time. I don't know where to store this so it will be like this
+// for now. oof.
 func search(cmd *flags.Flag) string {
 	for command, action := range Cmd {
 		if cmd.Value == command {

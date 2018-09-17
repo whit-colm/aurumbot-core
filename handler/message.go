@@ -30,9 +30,11 @@ import (
 *       method should only be used to determine what the user is acutally
 *       trying to do.
  */
-func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
+func MessageCreate(session *dsg.Session, message *dsg.MessageCreate) {
+	s := session
+	m := message.Message
 	// The message is checked to see if its a command and can be run
-	canRunCommand, err := canTriggerBot(s, m.Message)
+	canRunCommand, err := canTriggerBot(s, m)
 	if err != nil {
 		dat.Log.Println(err.Error())
 		dat.AlertDiscord(s, m, err)
@@ -62,13 +64,13 @@ func MessageCreate(s *dsg.Session, m *dsg.MessageCreate) {
 		return
 	}
 
-	message := strings.Split(m.Content, " ")
+	msgSplit := strings.Split(m.Content, " ")
 
 	// Now the message is run to see if its a valid command and acted upon.
 	for command, action := range Cmd {
-		if message[0] == command {
+		if msgSplit[0] == command {
 			if action.Perms != -1 {
-				perm, err := f.HasPermissions(s, m.Message, m.Author.ID, action.Perms)
+				perm, err := f.HasPermissions(s, m, m.Author.ID, action.Perms)
 				if err != nil {
 					dat.Log.Println(err)
 					dat.AlertDiscord(s, m, err)

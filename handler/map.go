@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/aurumbot/dat/data"
 	f "github.com/aurumbot/dat/foundation"
+	dsg "github.com/bwmarrin/discordgo"
 	"io/ioutil"
 	"plugin"
 )
@@ -24,12 +25,12 @@ func init() {
 		Help:    "Reloads plugins from the ./plugin directory.",
 		Perms:   dsg.PermissionAdministrator,
 		Version: "1.0.0α",
-		Action: func(session *dsg.Session, message *dsg.MessageCreate) {
+		Action: func(session *dsg.Session, message *dsg.Message) {
 			err := reloadPlugins()
 			if err != nil {
-				dat.AlertDiscord(s, m, err)
+				dat.AlertDiscord(session, message, err)
 			} else {
-				session.ChannelMessageSend(message.Message.ChannelID, "Successfully reloaded plugins")
+				session.ChannelMessageSend(message.ChannelID, "Successfully reloaded plugins")
 			}
 		},
 	}
@@ -40,21 +41,27 @@ func reloadPlugins() error {
 	files, err := ioutil.ReadDir("./plugins/")
 	if err != nil {
 		dat.Log.Println(err)
-		return
+		return err
 	}
 	for _, module := range files {
 		p, err := plugin.Open("./plugins/" + module)
 		if err != nil {
 			dat.Log.Println(err)
-			return
+			return err
 		}
 		s, err := p.Lookup("Commands")
 		if err != nil {
 			dat.Log.Println(err)
-			return
+			return err
 		}
-		for key, value := range s {
+		cmds, err := s.([string]*f.Command)
+		if err != nil {
+			dat.Log.Println(err)
+			return err
+		}
+		for key, value := range cmds {
 			Cmd[key] = value
 		}
 	}
+	return nil
 }
