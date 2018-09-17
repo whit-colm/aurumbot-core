@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"github.com/aurumbot/dat/data"
 	f "github.com/aurumbot/dat/foundation"
 	dsg "github.com/bwmarrin/discordgo"
@@ -44,7 +45,7 @@ func reloadPlugins() error {
 		return err
 	}
 	for _, module := range files {
-		p, err := plugin.Open("./plugins/" + module)
+		p, err := plugin.Open("./plugins/" + module.Name())
 		if err != nil {
 			dat.Log.Println(err)
 			return err
@@ -54,8 +55,9 @@ func reloadPlugins() error {
 			dat.Log.Println(err)
 			return err
 		}
-		cmds, err := s.([string]*f.Command)
-		if err != nil {
+		cmds, ok := s.(map[string]*f.Command)
+		if !ok {
+			err := errors.New("Unexpected type from module symbol")
 			dat.Log.Println(err)
 			return err
 		}

@@ -86,10 +86,10 @@ func MessageCreate(session *dsg.Session, message *dsg.MessageCreate) {
 		}
 	}
 
-	if strings.Contains(m.Message.Content, "@") {
-		s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Message.Author.ID+">, but I don't understand.")
+	if strings.Contains(m.Content, "@") {
+		s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Author.ID+">, but I don't understand.")
 	} else {
-		s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Message.Author.ID+">, but I don't understand what you mean by \"`"+m.Message.Content+"`\".")
+		s.ChannelMessageSend(m.ChannelID, "Sorry <@"+m.Author.ID+">, but I don't understand what you mean by \"`"+m.Content+"`\".")
 	}
 
 }

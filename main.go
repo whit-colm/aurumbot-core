@@ -151,29 +151,3 @@ func runBot() {
 
 	dat.Log.Println("Escape for bot called. The system is now closing cleanly")
 }
-
-/*func installWizard(service *Service) (string, error) {
-	fmt.Println("You will be taken through the process of installing an instance of")
-	fmt.Println("the go-discord bot. Please have a bot user ready from")
-	fmt.Println("https://discordapp.com/developers/applications/ before progressing.")
-	clid, err := input.Prompt("Please enter the client ID:\n> ")
-	if err != nil {
-		dat.Log.Println(err)
-		return "", err
-	}
-	clsc, err := input.Prompt("Please enter the client secret:\n> ")
-	if err != nil {
-		dat.Log.Println(err)
-		return "", err
-	}
-	cltk, err := input.Prompt("Please enter the token:\n> ")
-	if err != nil {
-		dat.Log.Println(err)
-		return "", err
-	}
-	pref, err := input.Prompt("Please decide on a prefix. This is used to call the bot (leave blank to only have an @ mention trigger)\nPrefix: ")
-	if err != nil {
-		dat.Log.Println(err)
-		return "", err
-	}
-}*/
