@@ -98,6 +98,12 @@ func list(session *dsg.Session, message *dsg.Message) string {
 	// alphabetically later.
 	var availableCommands []string
 	for command, action := range Cmd {
+		// This is here unstead of with the rest because if a user has no
+		// roles, they aren't checked even if the perm is open to everyone.
+		if action.Perms == -1 {
+			availableCommands = append(availableCommands, "\n"+f.MyBot.Prefs.Prefix+command+" : "+action.Name)
+			continue
+		}
 		for _, role := range roles {
 			// This sorts through the users roles, if they have
 			// its permissions are checked, otherwise it moves on
@@ -111,10 +117,7 @@ func list(session *dsg.Session, message *dsg.Message) string {
 			// docs.
 			// This is repetitive, yes, but its broken up to
 			// prevent 1 ajsdillion character long lines.
-			if action.Perms == -1 {
-				availableCommands = append(availableCommands, "\n"+f.MyBot.Prefs.Prefix+command+" : "+action.Name)
-				break
-			} else if role.Permissions&action.Perms != 0 {
+			if role.Permissions&action.Perms != 0 {
 				availableCommands = append(availableCommands, "\n"+f.MyBot.Prefs.Prefix+command+" : "+action.Name)
 				break
 			} else if role.Permissions&dsg.PermissionAdministrator != 0 {
