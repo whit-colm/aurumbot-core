@@ -17,12 +17,12 @@ type Service struct {
 	daemon.Daemon
 }
 
-const (
-	name        = "aurum"
-	description = "An aurum bot instance"
-)
+const description = "An aurum bot instance"
 
-var port string
+var (
+	port string
+	name string
+)
 
 func (service *Service) Manage() (string, error) {
 	usage := "Usage: " + name + " install | remove | start | stop | status"
@@ -127,6 +127,7 @@ func runBot() {
 	}
 	f.MyBot = bot
 	port = bot.Auth.Port
+	name = bot.Auth.Name
 
 	dat.Log.Println("Creating bot session")
 	dg, err := dsg.New("Bot " + bot.Auth.Token)
@@ -146,8 +147,5 @@ func runBot() {
 		dat.Log.Println("Socket successfully opened.")
 	}
 	f.DG = dg
-
-	f.DG.UpdateStatus(0, f.MyBot.Prefs.Playing)
-
 	dat.Log.Println("Escape for bot called. The system is now closing cleanly")
 }

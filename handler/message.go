@@ -49,8 +49,8 @@ func MessageCreate(session *dsg.Session, message *dsg.MessageCreate) {
 
 	// The prefix is cut off the message so the commands can be more easily handled.
 	var msg []string
-	if strings.HasPrefix(m.Content, f.MyBot.Prefs.Prefix) {
-		msg = strings.SplitAfterN(messageSanatized, f.MyBot.Prefs.Prefix, 2)
+	if strings.HasPrefix(m.Content, f.MyBot.Auth.Prefix) {
+		msg = strings.SplitAfterN(messageSanatized, f.MyBot.Auth.Prefix, 2)
 		m.Content = msg[1]
 		//TODO: Check if there is a way to use a mention() method of discordgo rather than
 		//this string frankenstein
