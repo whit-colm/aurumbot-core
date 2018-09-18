@@ -3,12 +3,9 @@
     "clientID": "$ID",
     "secret": "$SECRET",
     "token": "$TOKEN",
-    "Port": "$PORT"
-  },
-  "prefs": {
-    "prefix": "!",
-    "playing": "",
-    "version": "6.0α build 1"
+    "port": ":$PORT",
+    "name": "$NAME",
+    "prefix": "$"
   },
   "perms": {
     "whitelistChannels": false,
