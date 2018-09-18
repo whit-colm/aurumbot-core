@@ -5,6 +5,7 @@ import (
 	f "github.com/aurumbot/dat/foundation"
 	"github.com/aurumbot/flags"
 	dsg "github.com/bwmarrin/discordgo"
+	"sort"
 	"strings"
 	"time"
 )
@@ -19,7 +20,7 @@ Flags:
 Usage : ` + f.MyBot.Prefs.Prefix + `help -c <command>
 	` + f.MyBot.Prefs.Prefix + `help -ls`,
 		Perms:   -1,
-		Version: "v2.0.1β",
+		Version: "v2.1.0β",
 		Action:  help,
 	}
 }
@@ -63,23 +64,75 @@ func help(session *dsg.Session, message *dsg.Message) {
 	}
 }
 
-// TODO: Stop making repeat calls via HasPermissions
 func list(session *dsg.Session, message *dsg.Message) string {
 	t1 := time.Now()
+	// Due to the fact that to verify permissions, a call to HasPermissions is
+	// required, which goes to discord each time, I'm committing a classic sin
+	// of making my code less dry to improve speed
+
+	// Gets the guild
+	guild, err := f.GetGuild(session, message)
+	if err != nil {
+		dat.Log.Println(err)
+		dat.AlertDiscord(session, message, err)
+		return ""
+	}
+	// Gets the message author as a guild member
+	member, err := session.GuildMember(guild.ID, message.Author.ID)
+	if err != nil {
+		dat.Log.Println(err)
+		dat.AlertDiscord(session, message, err)
+		return ""
+	}
+	// Grabs all of the roles of the guild
+	roles, err := session.GuildRoles(guild.ID)
+	if err != nil {
+		dat.Log.Println(err)
+		dat.AlertDiscord(session, message, err)
+		return ""
+	}
+	// msg is the final string tht will be sent to discord
 	msg := "**Available Commands:**"
+	// This slice will store all the commands that the user *can* run.
+	// It is a slice instead of a string because it will be sorted
+	// alphabetically later.
+	var availableCommands []string
 	for command, action := range Cmd {
-		u, err := f.HasPermissions(session, message, message.Author.ID, action.Perms)
-		if err != nil {
-			dat.Log.Println(err)
-			dat.AlertDiscord(session, message, err)
-			return ""
-		}
-		if u {
-			msg += "\n" + f.MyBot.Prefs.Prefix + command + " : " + action.Name
+		for _, role := range roles {
+			// This sorts through the users roles, if they have
+			// its permissions are checked, otherwise it moves on
+			// to the next role
+			if !f.Contains(member.Roles, role.ID) {
+				continue
+			}
+			// checks permissions of the role, now that we know
+			// the user has it. This also checks if they have an
+			// "administrator" role as defined in the bot's config
+			// docs.
+			// This is repetitive, yes, but its broken up to
+			// prevent 1 ajsdillion character long lines.
+			if action.Perms == -1 {
+				availableCommands = append(availableCommands, "\n"+f.MyBot.Prefs.Prefix+command+" : "+action.Name)
+				break
+			} else if role.Permissions&action.Perms != 0 {
+				availableCommands = append(availableCommands, "\n"+f.MyBot.Prefs.Prefix+command+" : "+action.Name)
+				break
+			} else if role.Permissions&dsg.PermissionAdministrator != 0 {
+				availableCommands = append(availableCommands, "\n"+f.MyBot.Prefs.Prefix+command+" : "+action.Name)
+				break
+			} else if f.Contains(f.MyBot.Users.AdminRoles, role.ID) {
+				availableCommands = append(availableCommands, "\n"+f.MyBot.Prefs.Prefix+command+" : "+action.Name)
+				break
+			}
 		}
 	}
-	t2 := time.Since(t1)
-	tStr := t2.String()
+	// Now availableCommands is sorted and written to msg
+	sort.Strings(availableCommands)
+	for _, c := range availableCommands {
+		msg += c
+	}
+
+	tStr := time.Since(t1).String()
 	msg += "\nUse `" + f.MyBot.Prefs.Prefix + "help -c <command>` to get more info on a command (" + tStr + ")"
 	return msg
 }
