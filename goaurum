@@ -5,11 +5,11 @@ au_latestversion="https://github.com/aurumbot/core/archive/v1.0.0-beta.4.zip"
 
 _init() {
   echo "You will be guided through the process of installing aurum's dependancies."
-  printf "Install for \033[1;31m$OS\033[0m? [Y/n]\n"
+  printf "Install? [Y/n]\n"
   read -e -p "> " answer
 
   if [[ "$answer" = "no" ]] | [[ "$answer" = "n" ]] ; then
-    echo "Well thats what your OS says :/"
+    echo "Quitting program"
     exit 0
   fi
 
@@ -32,6 +32,57 @@ _init() {
       brew install tmux
     fi
   else
+    echo "installing core dependencies"
+    if [[ `which apt` != "" ]] ; then
+      sudo apt update
+      if [[ `which git` = "" ]] ; then
+        sudo apt install git
+      fi
+      if [[ `which git` = "tmux" ]] ; then
+        sudo apt install tmux
+      fi
+      if [[ `which wget` = "" ]] & [[ `which curl` = "" ]] ; then
+        sudo apt install wget
+      fi
+    elif [[ `which pacman` != "" ]] ; then
+      if [[ `which git` = "" ]] ; then
+        pacman -S git
+      fi
+      if [[ `which git` = "tmux" ]] ; then
+        pacman -S tmux
+      fi
+      if [[ `which wget` = "" ]] & [[ `which curl` = "" ]] ; then
+        pacman -S wget
+      fi
+    elif [[ `which pkg` != "" ]] ; then
+      if [[ `which git` = "" ]] ; then
+        pkg install git
+      fi
+      if [[ `which git` = "tmux" ]] ; then
+        pkg install tmux
+      fi
+      if [[ `which wget` = "" ]] & [[ `which curl` = "" ]] ; then
+        pkg install wget
+      fi
+    elif [[ `which yum` != "" ]] ; then
+      if [[ `which git` = "" ]] ; then
+        yum install git
+      fi
+      if [[ `which git` = "tmux" ]] ; then
+        yum install tmux
+      fi
+      if [[ `which wget` = "" ]] & [[ `which curl` = "" ]] ; then
+        yum install wget
+      fi
+    else
+      echo "Your package manager could not be found. Please make sure you have:"
+      echo "● git"
+      echo "● tmux"
+      echo "● wget or curl"
+      if [[ `which wget` = "" ]] & [[ `which curl` = "" ]] & [[ `which git` = "" ]] & [[ `which tmux` = "" ]] ; then
+        exit 1
+      fi
+    fi
     if [[ `which go` = "" ]] ; then
       echo "downloading go..."
       echo "what architecture are you using?"
@@ -49,10 +100,7 @@ _init() {
       fi
       echo "installing go"
       tar -C /usr/local -xzf go1.11.linux-$answer.tar.gz
-      if [[ `which tmux` = "" ]] ; then
-        echo "You don't appear to have tmux. how does that work?"
-        exit
-      fi
+      echo "installs complete. use goaurum init to configure a new aurum bot"
     fi
   fi
 }
@@ -89,10 +137,10 @@ _install() {
     git clone https://github.com/aurumbot/core.git ./.tmp/
   else
     echo "You don't appear to have git. how does that work?"
+  fi
     rm -rf ./.tmp
     cd - 2&>1
-      exit 1
-    fi
+    exit 1
     mv ./.tmp/main.go ./
     mv ./.tmp/README.md ./
     mv ./.tmp/go.mod ./ 
@@ -100,49 +148,29 @@ _install() {
     mv ./.tmp/handler ./handler
     mv ./.tmp/LICENSE ./
     echo "aurum/core downloaded. fetching dependencies and compiling."
+    export PATH=$PATH:/usr/local/go/bin
     env CGO_ENABLED=0 GO111MODULE=on go build ./...
     env CGO_ENABLED=0 GO111MODULE=on go build -v -o $au_name main.go
     echo "$au_name has been compiled. Finishing up."
     # I'm sorry.
 
     cat > ./dat/cfg/aurum/preferences.json << JsonEnd
-  {
-    "auth": {
-      "clientID": "$au_cid",
-      "secret": "$au_sec",
-      "token": "$au_tok",
-      "prefix": "$au_prf"
-    },
-    "perms": {
-      "whitelistChannels": false,
-      "whitelistedChannels": [
-        ""
-      ],
-      "blacklistedChannels": [
-        ""
-      ]
-    },
-    "users": {
-      "roleWhitelist":false,
-      "reportPermissionFailures":false,
-      "blacklistedRoles": [
-        ""
-      ],
-      "adminRoles": [
-        ""
-      ]
-    }
-  }
-  JsonEnd
-    # ok its over.
-    rm -rf ./handler
-    rm go.mod
-    rm go.sum
-    rm main.go
-    rm -rf ./.tmp
-    echo "$au_name successfully installed Use the link below to put it on your server."
-    echo "https://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot"
-    cd - 2&>1
+{
+    "clientID": "$au_cid",
+    "secret": "$au_sec",
+    "token": "$au_tok",
+    "prefix": "$au_prf"
+} 
+JsonEnd
+  # ok its over.
+  rm -rf ./handler
+  rm go.mod
+  rm go.sum
+  rm main.go
+  rm -rf ./.tmp
+  echo "$au_name successfully installed Use the link below to put it on your server."
+  echo "https://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot"
+  cd - 2&>1
 }
 
 _help() {
@@ -162,5 +190,3 @@ elif [[ "$1" = "install" ]] ; then
 else
   _help
 fi
-
-
