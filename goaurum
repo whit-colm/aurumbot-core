@@ -8,40 +8,40 @@ _init() {
   printf "Install for \033[1;31m$OS\033[0m? [Y/n]\n"
   read -e -p "> " answer
 
-  if [ "$answer" = "no" ] | [ "$answer" = "n" ] ; then
+  if [[ "$answer" = "no" ]] | [[ "$answer" = "n" ]] ; then
     echo "Well thats what your OS says :/"
     exit 0
   fi
 
-  if [ "$OS" = "Darwin" ] ; then
-    while [ `which gcc` = "" ] ; do
+  if [[ "$OS" = "Darwin" ]] ; then
+    while [[ `which gcc` = "" ]] ; do
       echo "installing necessary command line tools, please follow the on-screen"
       echo "dialogue boxes to install xcode tools."
       xcode-select --install
     done
-    if [ `which brew` = "" ] ; then
+    if [[ `which brew` = "" ]] ; then
       echo "installing homebrew."
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
-    if [ `which go` = "" ] ; then
+    if [[ `which go` = "" ]] ; then
       echo "installing golang"
       brew install go
     fi
-    if [ `which tmux` = "" ] ; then
+    if [[ `which tmux` = "" ]] ; then
       echo "installing tmux"
       brew install tmux
     fi
   else
-    if [ `which go` = "" ] ; then
+    if [[ `which go` = "" ]] ; then
       echo "downloading go..."
       echo "what architecture are you using?"
       printf "● \033[1;31mamd64\033[0m (most likely)\n"
       printf "● \033[1;31m386\033[0m (32 bit intel systems)\n"
       printf "● \033[1;31marmv6l\033[0m (arm systems such as rasperry pis)\n"
       read -e -p "> " answer
-      if [ `which wget` != "" ] ; then
+      if [[ `which wget` != "" ]] ; then
         wget https://dl.google.com/go/go1.11.linux-$answer.tar.gz
-      elif [ `which curl` != "" ] ; then
+      elif [[ `which curl` != "" ]] ; then
         curl https://dl.google.com/go/go1.11.linux-$answer.tar.gz -o go1.11.linux-$answer.tar.gz
       else
         echo "You don't appear to have wget or curl. how does that work?"
@@ -49,7 +49,7 @@ _init() {
       fi
       echo "installing go"
       tar -C /usr/local -xzf go1.11.linux-$answer.tar.gz
-      if [ `which tmux` = "" ] ; then
+      if [[ `which tmux` = "" ]] ; then
         echo "You don't appear to have tmux. how does that work?"
         exit
       fi
@@ -67,7 +67,7 @@ _install() {
   echo "Name set ($au_name)"
   echo "Where weould you like to setup the bot? (leave blank for current directory)"
   read -e -p "> " au_path
-  if [ $au_path = "" ] ; then
+  if [[ $au_path = "" ]] ; then
     au_path=`pwd`
   fi
   echo "Setting up directory heirarchy in ${au_path}/${au_name}."
@@ -85,7 +85,7 @@ _install() {
   echo "Prefrences set."
   echo "Fetching most recent version of aurum"
   mkdir ./.tmp
-  if [ `which git` != "" ] ; then
+  if [[ `which git` != "" ]] ; then
     git clone https://github.com/aurumbot/core.git ./.tmp/
   else
     echo "You don't appear to have git. how does that work?"
@@ -155,9 +155,9 @@ _help() {
 
 #---------------------------------
 
-if [ "$1" = "init" ] ; then
+if [[ "$1" = "init" ]] ; then
   _init
-elif [ "$1" = "install" ] ; then
+elif [[ "$1" = "install" ]] ; then
   _install
 else
   _help
