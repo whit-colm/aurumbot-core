@@ -10,13 +10,15 @@ import (
 	"syscall"
 )
 
+var bot *f.BotType
+
 func main() {
 	runBot()
 	// And the main should end here. so what to do about this?
 }
 
 func runBot() {
-	bot, err := dat.GetBotInfo()
+	err := dat.Load("aurum/prefrences.json", &bot)
 	dat.Log.Println("Reading bot prefs file...")
 	if err != nil {
 		dat.Log.Fatalln(err.Error())
