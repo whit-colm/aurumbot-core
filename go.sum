@@ -1,13 +1,4 @@
-github.com/aurumbot/dat v1.0.0 h1:6X+WMakwlSGq4wUhmntuIBSZlmbwVeEzTRFlZU8XDeQ=
 github.com/aurumbot/dat v1.0.0/go.mod h1:xuxmP72h6JWtWMgGka9Ig2iaMjWmmbDZEArGClhHu0w=
-github.com/aurumbot/dat v1.0.1-0.20180917135725-2d830733137c h1:kDQW2vqSuM5hfVW2IaG+ruT6gK9ZS+CBTTyHgPWhl+Q=
-github.com/aurumbot/dat v1.0.1-0.20180917135725-2d830733137c/go.mod h1:xuxmP72h6JWtWMgGka9Ig2iaMjWmmbDZEArGClhHu0w=
-github.com/aurumbot/dat v1.0.1 h1:ZdYwuSudlGogPdVaqMOuxJvmXaukmHM3j5ebyxWbgQA=
-github.com/aurumbot/dat v1.0.1/go.mod h1:xuxmP72h6JWtWMgGka9Ig2iaMjWmmbDZEArGClhHu0w=
-github.com/aurumbot/dat v1.0.2 h1:1CE9K+O47o3H0rtY8RXDX+fe8/YpDu7P3JXYNVvQ5RI=
-github.com/aurumbot/dat v1.0.2/go.mod h1:xuxmP72h6JWtWMgGka9Ig2iaMjWmmbDZEArGClhHu0w=
-github.com/aurumbot/dat v1.0.3 h1:JAqgeOqvfCQEPd/J2JXdSYLwsYXNzUueib64d0jRUng=
-github.com/aurumbot/dat v1.0.3/go.mod h1:xuxmP72h6JWtWMgGka9Ig2iaMjWmmbDZEArGClhHu0w=
 github.com/aurumbot/dat v1.0.4 h1:Y54LydfD+/zuSHx0wIoAbgXB57p83ikZ5fIowPejU2A=
 github.com/aurumbot/dat v1.0.4/go.mod h1:xuxmP72h6JWtWMgGka9Ig2iaMjWmmbDZEArGClhHu0w=
 github.com/aurumbot/flags v1.0.0 h1:2FhFUGcGmh3AmC/WVQKVT6sVJaIF5GUy4ieHaOVZJyc=
