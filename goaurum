@@ -73,7 +73,7 @@ _install() {
   echo "Setting up directory heirarchy in ${au_path}/${au_name}."
   mkdir ${au_path}/${au_name}
   cd ${au_path}/${au_name}
-  mkdir dat plugins dat dat/logs dat/cfg dat/cfg/aurum
+  mkdir plugins dat dat/logs dat/cfg dat/cfg/aurum
   touch dat/cfg/aurum/preferences.json
   echo "Heirarchy created.\n"
   echo "Go to https://discordapp.com/developers/applications/ and create a bot application."
@@ -91,58 +91,58 @@ _install() {
     echo "You don't appear to have git. how does that work?"
     rm -rf ./.tmp
     cd - 2&>1
-    exit 1
-  fi
-  mv ./.tmp/main.go ./
-  mv ./.tmp/README.md ./
-  mv ./.tmp/go.mod ./ 
-  mv ./.tmp/go.sum ./
-  mv ./.tmp/handler ./handler
-  mv ./.tmp/LICENSE ./
-  echo "aurum/core downloaded. fetching dependencies and compiling."
-  go build ./...
-  go build -v -o $au_name main.go
-  echo "$au_name has been compiled. Finishing up."
-  # I'm sorry.
+      exit 1
+    fi
+    mv ./.tmp/main.go ./
+    mv ./.tmp/README.md ./
+    mv ./.tmp/go.mod ./ 
+    mv ./.tmp/go.sum ./
+    mv ./.tmp/handler ./handler
+    mv ./.tmp/LICENSE ./
+    echo "aurum/core downloaded. fetching dependencies and compiling."
+    env CGO_ENABLED=0 GO111MODULE=on go build ./...
+    env CGO_ENABLED=0 GO111MODULE=on go build -v -o $au_name main.go
+    echo "$au_name has been compiled. Finishing up."
+    # I'm sorry.
 
-  cat > ./dat/cfg/aurum/preferences.json << JsonEnd
-{
-  "auth": {
-    "clientID": "$au_cid",
-    "secret": "$au_sec",
-    "token": "$au_tok",
-    "prefix": "$au_prf"
-  },
-  "perms": {
-    "whitelistChannels": false,
-    "whitelistedChannels": [
-      ""
-    ],
-    "blacklistedChannels": [
-      ""
-    ]
-  },
-  "users": {
-    "roleWhitelist":false,
-    "reportPermissionFailures":false,
-    "blacklistedRoles": [
-      ""
-    ],
-    "adminRoles": [
-      ""
-    ]
+    cat > ./dat/cfg/aurum/preferences.json << JsonEnd
+  {
+    "auth": {
+      "clientID": "$au_cid",
+      "secret": "$au_sec",
+      "token": "$au_tok",
+      "prefix": "$au_prf"
+    },
+    "perms": {
+      "whitelistChannels": false,
+      "whitelistedChannels": [
+        ""
+      ],
+      "blacklistedChannels": [
+        ""
+      ]
+    },
+    "users": {
+      "roleWhitelist":false,
+      "reportPermissionFailures":false,
+      "blacklistedRoles": [
+        ""
+      ],
+      "adminRoles": [
+        ""
+      ]
+    }
   }
-}
-JsonEnd
-  # ok its over.
-  rm -rf ./handler
-  rm go.mod
-  rm go.sum
-  rm main.go
-  rm -rf ./.tmp
-  echo "$au_name successfully installed Use the link below to put it on your server."
-  echo "https://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot"
-  cd - 2&>1
+  JsonEnd
+    # ok its over.
+    rm -rf ./handler
+    rm go.mod
+    rm go.sum
+    rm main.go
+    rm -rf ./.tmp
+    echo "$au_name successfully installed Use the link below to put it on your server."
+    echo "https://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot"
+    cd - 2&>1
 }
 
 _help() {
