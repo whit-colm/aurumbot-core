@@ -26,7 +26,7 @@ func runBot() {
 		dat.Log.Println("Bot prefrences recived.")
 	}
 	dat.Log.Println("Creating bot session")
-	dg, err := dsg.New("Bot " + bot.Auth.Token)
+	dg, err := dsg.New("Bot " + bot.Token)
 	if err != nil {
 		dat.Log.Fatalln(err)
 	} else {

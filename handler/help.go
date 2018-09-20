@@ -101,7 +101,7 @@ func list(session *dsg.Session, message *dsg.Message) string {
 		// This is here unstead of with the rest because if a user has no
 		// roles, they aren't checked even if the perm is open to everyone.
 		if action.Perms == -1 {
-			availableCommands = append(availableCommands, "\n"+f.MyBot.Auth.Prefix+command+" : "+action.Name)
+			availableCommands = append(availableCommands, "\n"+f.MyBot.Prefix+command+" : "+action.Name)
 			continue
 		}
 		for _, role := range roles {
@@ -118,13 +118,13 @@ func list(session *dsg.Session, message *dsg.Message) string {
 			// This is repetitive, yes, but its broken up to
 			// prevent 1 ajsdillion character long lines.
 			if role.Permissions&action.Perms != 0 {
-				availableCommands = append(availableCommands, "\n"+f.MyBot.Auth.Prefix+command+" : "+action.Name)
+				availableCommands = append(availableCommands, "\n"+f.MyBot.Prefix+command+" : "+action.Name)
 				break
 			} else if role.Permissions&dsg.PermissionAdministrator != 0 {
-				availableCommands = append(availableCommands, "\n"+f.MyBot.Auth.Prefix+command+" : "+action.Name)
+				availableCommands = append(availableCommands, "\n"+f.MyBot.Prefix+command+" : "+action.Name)
 				break
 			} else if f.Contains(f.MyBot.Users.AdminRoles, role.ID) {
-				availableCommands = append(availableCommands, "\n"+f.MyBot.Auth.Prefix+command+" : "+action.Name)
+				availableCommands = append(availableCommands, "\n"+f.MyBot.Prefix+command+" : "+action.Name)
 				break
 			}
 		}
@@ -136,7 +136,7 @@ func list(session *dsg.Session, message *dsg.Message) string {
 	}
 
 	tStr := time.Since(t1).String()
-	msg += "\nUse `" + f.MyBot.Auth.Prefix + "help -c <command>` to get more info on a command (" + tStr + ")"
+	msg += "\nUse `" + f.MyBot.Prefix + "help -c <command>` to get more info on a command (" + tStr + ")"
 	return msg
 }
 

@@ -49,13 +49,13 @@ func MessageCreate(session *dsg.Session, message *dsg.MessageCreate) {
 
 	// The prefix is cut off the message so the commands can be more easily handled.
 	var msg []string
-	if strings.HasPrefix(m.Content, f.MyBot.Auth.Prefix) {
-		msg = strings.SplitAfterN(messageSanatized, f.MyBot.Auth.Prefix, 2)
+	if strings.HasPrefix(m.Content, f.MyBot.Prefix) {
+		msg = strings.SplitAfterN(messageSanatized, f.MyBot.Prefix, 2)
 		m.Content = msg[1]
 		//TODO: Check if there is a way to use a mention() method of discordgo rather than
 		//this string frankenstein
-	} else if strings.HasPrefix(m.Content, "<@!"+f.MyBot.Auth.ClientID+">") {
-		msg = strings.SplitAfterN(messageSanatized, "<@!"+f.MyBot.Auth.ClientID+">", 2)
+	} else if strings.HasPrefix(m.Content, "<@!"+f.MyBot.ClientID+">") {
+		msg = strings.SplitAfterN(messageSanatized, "<@!"+f.MyBot.ClientID+">", 2)
 		m.Content = strings.TrimSpace(msg[1])
 	} else {
 		err := errors.New("Message passed 'can run' checks but does not start with prefix:\n" + m.Content)
