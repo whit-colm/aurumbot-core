@@ -1,0 +1,3 @@
+2018/09/20 18:56:06 /Users/whitman-colm/go/pkg/mod/github.com/aurumbot/dat@v1.0.5-0.20180920152044-6cd39cfbc59a/data/data.go:122: open ./dat/cfg/aurum/prefrences.json: no such file or directory
+2018/09/20 18:56:06 /Users/whitman-colm/repos/aurumbot/core/main.go:22: Reading bot prefs file...
+2018/09/20 18:56:06 /Users/whitman-colm/repos/aurumbot/core/main.go:24: open ./dat/cfg/aurum/prefrences.json: no such file or directory

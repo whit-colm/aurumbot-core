@@ -18,7 +18,7 @@ func main() {
 }
 
 func runBot() {
-	err := dat.Load("aurum/prefrences.json", &bot)
+	err := dat.Load("aurum/preferences.json", &bot)
 	dat.Log.Println("Reading bot prefs file...")
 	if err != nil {
 		dat.Log.Fatalln(err.Error())
