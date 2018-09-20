@@ -10,7 +10,7 @@ import (
 	"syscall"
 )
 
-var bot *f.BotType
+var bot *f.Bot
 
 func main() {
 	runBot()
@@ -42,11 +42,13 @@ func runBot() {
 	} else {
 		dat.Log.Println("Socket successfully opened.")
 	}
-	f.DG = dg
+	f.Session = dg
+	f.Config = *bot
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
+	dg.Close()
 	dat.Log.Println("Escape for bot called. The system is now closing cleanly")
 }

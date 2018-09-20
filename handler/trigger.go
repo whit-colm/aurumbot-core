@@ -38,15 +38,15 @@ func canTriggerBot(s *dsg.Session, m *dsg.Message) (bool, error) {
 	case m.Author.ID == s.State.User.ID:
 		return false, nil
 	//TODO: look at this stupid line. that seems like it shouldn't work.
-	//NOTE: Well it doesn't!
-	case !strings.HasPrefix(m.Content, f.MyBot.Prefix) && !strings.HasPrefix(m.Content, "<@!"+f.MyBot.ClientID+">"):
+	//NOTE: Well it doesn't (i.e. a @ to a bot doesn't consistantly work)!
+	case !strings.HasPrefix(m.Content, f.Config.Prefix) && !strings.HasPrefix(m.Content, "<@"+f.Config.ClientID+">") && !strings.HasPrefix(m.Content, "<@!"+f.Config.ClientID+">"):
 		return false, nil
 	case admin:
 		return true, nil
-	case f.Contains(f.MyBot.BlacklistedChannels, m.ChannelID) == true:
+	case f.Contains(f.Config.BlacklistedChannels, m.ChannelID) == true:
 		return false, nil
 	}
-	for _, b := range f.MyBot.BlacklistedRoles {
+	for _, b := range f.Config.BlacklistedRoles {
 		guild, err := f.GetGuild(s, m)
 		if err != nil {
 			return false, err

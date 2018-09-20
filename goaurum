@@ -156,10 +156,19 @@ _install() {
 
     cat > ./dat/cfg/aurum/preferences.json << JsonEnd
 {
-    "clientID": "$au_cid",
-    "secret": "$au_sec",
-    "token": "$au_tok",
-    "prefix": "$au_prf"
+  "clientID": "$au_cid",
+  "secret": "$au_sec",
+  "token": "$au_tok",
+  "prefix": "$au_prf"
+  "channels": [
+    ""
+  ],
+  "roles": [
+    ""
+  ],
+  "admins": [
+    ""
+  ]
 } 
 JsonEnd
   # ok its over.
