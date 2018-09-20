@@ -1,6 +1,12 @@
 github.com/aurumbot/dat v1.0.0/go.mod h1:xuxmP72h6JWtWMgGka9Ig2iaMjWmmbDZEArGClhHu0w=
 github.com/aurumbot/dat v1.0.4 h1:Y54LydfD+/zuSHx0wIoAbgXB57p83ikZ5fIowPejU2A=
 github.com/aurumbot/dat v1.0.4/go.mod h1:xuxmP72h6JWtWMgGka9Ig2iaMjWmmbDZEArGClhHu0w=
+github.com/aurumbot/dat v1.0.5-0.20180919233407-e859758bcf4c h1:jTM9x/xD54K6Tj/37lFU+WCCsqe03nIB79LygyR9e5c=
+github.com/aurumbot/dat v1.0.5-0.20180919233407-e859758bcf4c/go.mod h1:xuxmP72h6JWtWMgGka9Ig2iaMjWmmbDZEArGClhHu0w=
+github.com/aurumbot/dat v1.0.5-0.20180920151246-2ee5597ebda4 h1:wZRpW7/nh3zpqBlZ3hKg1Ypb8PZgqWHlSt4zvzRdI08=
+github.com/aurumbot/dat v1.0.5-0.20180920151246-2ee5597ebda4/go.mod h1:xuxmP72h6JWtWMgGka9Ig2iaMjWmmbDZEArGClhHu0w=
+github.com/aurumbot/dat v1.0.5-0.20180920152044-6cd39cfbc59a h1:GkqBqMDVzvvxraR+W6tenGCkYlMP1OFL9aiszhqREHA=
+github.com/aurumbot/dat v1.0.5-0.20180920152044-6cd39cfbc59a/go.mod h1:xuxmP72h6JWtWMgGka9Ig2iaMjWmmbDZEArGClhHu0w=
 github.com/aurumbot/flags v1.0.0 h1:2FhFUGcGmh3AmC/WVQKVT6sVJaIF5GUy4ieHaOVZJyc=
 github.com/aurumbot/flags v1.0.0/go.mod h1:du50XjbPKl4UpCf9ZBNdWfFk4xfl4+jcWMv/15jnIYo=
 github.com/bwmarrin/discordgo v0.18.0 h1:XopVQXCIFy7Cr2eT7NcYcm4k0l2PYX+AP5RUbIWX2/8=

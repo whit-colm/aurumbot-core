@@ -17,8 +17,8 @@ func init() {
 Flags:
 -c --command <command>	: get help for the specific <command>
 -ls --list		: get a list of all available commands
-Usage : ` + f.MyBot.Auth.Prefix + `help -c <command>
-	` + f.MyBot.Auth.Prefix + `help -ls`,
+Usage : ` + f.MyBot.Prefix + `help -c <command>
+	` + f.MyBot.Prefix + `help -ls`,
 		Perms:   -1,
 		Version: "v2.1.0β",
 		Action:  help,
@@ -123,7 +123,7 @@ func list(session *dsg.Session, message *dsg.Message) string {
 			} else if role.Permissions&dsg.PermissionAdministrator != 0 {
 				availableCommands = append(availableCommands, "\n"+f.MyBot.Prefix+command+" : "+action.Name)
 				break
-			} else if f.Contains(f.MyBot.Users.AdminRoles, role.ID) {
+			} else if f.Contains(f.MyBot.Admins, role.ID) {
 				availableCommands = append(availableCommands, "\n"+f.MyBot.Prefix+command+" : "+action.Name)
 				break
 			}
