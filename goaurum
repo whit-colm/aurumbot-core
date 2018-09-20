@@ -79,7 +79,7 @@ _init() {
       echo "● git"
       echo "● tmux"
       echo "● wget or curl"
-      if [[ `which wget` = "" ]] & [[ `which curl` = "" ]] & [[ `which git` = "" ]] & [[ `which tmux` = "" ]] ; then
+      if [[ `which wget` = "" ]] | [[ `which curl` = "" ]] & [[ `which git` = "" ]] & [[ `which tmux` = "" ]] ; then
         exit 1
       fi
     fi
