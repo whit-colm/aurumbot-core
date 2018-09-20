@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/aurumbot/dat/data"
-	f "github.com/aurumbot/dat/foundation"
 	"github.com/aurumbot/flags"
+	"github.com/aurumbot/lib/dat"
+	f "github.com/aurumbot/lib/foundation"
 	dsg "github.com/bwmarrin/discordgo"
 	"sort"
 	"strings"
