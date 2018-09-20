@@ -125,11 +125,11 @@ _install() {
   touch dat/cfg/aurum/preferences.json
   echo "Heirarchy created.\n"
   echo "Go to https://discordapp.com/developers/applications/ and create a bot application."
-  read -e -p "Enter the Client ID            : " au_cid
-  read -e -p "Enter the Client Secret        : " au_sec
-  read -e -p "Enter the Bot Token            : " au_tok
+  read -e -p "Enter the Client ID             : " au_cid
+  read -e -p "Enter the Client Secret         : " au_sec
+  read -e -p "Enter the Bot Token             : " au_tok
   echo "Authentication info set."
-  read -e -p "Set a command prefix (like \"!\" : " au_prf
+  read -e -p "Set a command prefix (like \"!\") : " au_prf
   echo "Prefrences set."
   echo "Fetching most recent version of aurum"
   mkdir ./.tmp
@@ -139,7 +139,7 @@ _install() {
     echo "You don't appear to have git. how does that work?"
   fi
     rm -rf ./.tmp
-    cd - 2&>1
+    cd - > 2&>1
     exit 1
     mv ./.tmp/main.go ./
     mv ./.tmp/README.md ./
@@ -170,7 +170,7 @@ JsonEnd
   rm -rf ./.tmp
   echo "$au_name successfully installed Use the link below to put it on your server."
   echo "https://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot"
-  cd - 2&>1
+  cd - > 2&>1
 }
 
 _help() {
