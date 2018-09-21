@@ -1,3 +1,5 @@
+github.com/aurumbot/flags v1.0.1-beta.1.0.20180921121654-97713540d01f h1:GIXTyUnzXQFbaXqM/1d+y5frPiTWXNCbo13Fstlhv4w=
+github.com/aurumbot/flags v1.0.1-beta.1.0.20180921121654-97713540d01f/go.mod h1:GL/p72gRpH3OVFO/yMRkDoMdrndsizeQCzxNeNHg958=
 github.com/aurumbot/lib v1.0.0-beta.1 h1:tMZToXq1M2oGBNVnTM3PtltgL+f5lCzA2iwJSS/+6JU=
 github.com/aurumbot/lib v1.0.0-beta.1/go.mod h1:13UHB9Z4X2zC5DHXAmw896seZlmVc914PdqRFq4nRBY=
 github.com/bwmarrin/discordgo v0.18.0 h1:XopVQXCIFy7Cr2eT7NcYcm4k0l2PYX+AP5RUbIWX2/8=
