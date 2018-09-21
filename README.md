@@ -11,18 +11,9 @@ Aurum is a framework for creating and hosting your own custom discord bot with e
 - Easy to host yourself for free. No patreon for "full features" or hosting fees.
 - Pseudo-daemon via tmux.
 
-## Installing and Running Aurum
+## Installing and Running Aurum and its plugins
 
-[Please see the wiki](https://github.com/aurumbot/core/wiki)
-
-## Installing Plugins
-
-1. Download the plugin from wherever, place it wherever.
-2. Run `goaurum mkplugin $PLUGIN_PATH` to compile the plugins into `.so` files. ($PLUGIN_PATH is optional, left blank it will be set to `./`.)
-3. Place the new .so plugins into the `$BOTNAME/plugins` directory
-4. Reload the plugins
-	- Run `!reloadplugins` (requires discord server administrator perms)
-	- Restart the bot
+[Please see the wiki](https://github.com/aurumbot/core/wiki) for details.
 
 ## Contributing to the Project
 
