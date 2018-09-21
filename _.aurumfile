@@ -2,4 +2,4 @@
 # keep track of where all its instances are stored. This is meant to be stored
 # in $HOME/.aurumfiles. Each line looks like this:
 # "$BOTNAME","/absolute/path/to/bot/elf","$TMUX_WINDOW"
-# if $TMUX_WINOW is -1, that means it is not running.
+# if $TMUX_WINOW is -1, that means the assosiated $BOTNAME is not running
