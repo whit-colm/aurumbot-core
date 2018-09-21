@@ -3,6 +3,10 @@
 # The one line of code that gets updated.
 au_latestversion="https://github.com/aurumbot/core/archive/v1.0.0-beta.4.zip"
 
+#_start() {}
+#_stop() {}
+#_index() {}
+
 _init() {
   echo "You will be guided through the process of installing aurum's dependancies."
   printf "Install? [Y/n]\n"
@@ -177,6 +181,10 @@ JsonEnd
   rm go.sum
   rm main.go
   rm -rf ./.tmp
+  echo "installing $au_name"
+  touch $HOME/.aurumfiles
+  cat ""
+
   echo "$au_name successfully installed Use the link below to put it on your server."
   echo "https://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot"
   cd - > 2&>1
@@ -186,8 +194,12 @@ _help() {
   printf "\033[1;31mUsage: \033[1;33mgoaurum <option>
 \033[0mThe config tool and managment tool for aurum discord bots.
 \n\033[1;31mOptions:
-\033[1;32minit    \033[0mfetch system dependancies (golang, tmux)
-\033[1;32minstall \033[0mcreate an instance of aurum\n"
+\033[1;32minit                \033[0mfetch system dependancies (golang, tmux)
+\033[1;32minstall             \033[0mcreate an instance of aurum
+\033[1;32mstart <name>        \033[0mstart the aurum bot called <name>
+\033[1;32mstop <name>         \033[0mstop the aurum bot called <name>
+\033[1;32mindex <name> <path> \033[0madd a pre-existing instance of aurum to 
+                    the manager. Also used to fix broken paths.\n"
 }
 
 #---------------------------------
