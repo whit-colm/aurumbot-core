@@ -11,18 +11,20 @@ import (
 )
 
 func init() {
-	Cmd["help"] = &f.Command{
-		Name: "Command Help Page Search",
+	Cmd["botcfg"] = &f.Command{
+		Name: "Bot configuration tool",
 		Help: `Info  : The built-in helper to get information about all of the bots commands
-Flags:
--c --command <command>	: get help for the specific <command>
--ls --list		: get a list of all available commands
-Usage : ` + f.Config.Prefix + `help -c <command>
-	` + f.Config.Prefix + `help -ls
+Options:
+prefix <prefix>			: set the default prefix for the bot
+admins <-a|-r|-l> [role ID]	: add or remove a botadmin role, which gives users with the role authorization to all bot abilities.
+blchans <-a|-r|-l> [#channel]	: add or remove a channel to the blacklist. Blacklisted channels will never have the bot respond to commands.
+blroles <-a|-r|-l> [roleID]	: add or remove a role to the blacklist. Users with blacklisted roles will never have the bot respond to their commands. (overwritten by admin roles)
+Usage : ` + f.Config.Prefix + `botcfg <flag> <value>
+	` + f.Config.Prefix + `botcfg -ls
 Powered by Aurum at https://github.com/aurumbot/core`,
-		Perms:   -1,
-		Version: "v2.1.0β",
-		Action:  help,
+		Perms:   dsg.PermissionAdministrator,
+		Version: "v1.0.0β",
+		Action:  botcfg,
 	}
 }
 
@@ -37,20 +39,17 @@ Powered by Aurum at https://github.com/aurumbot/core`,
 * -ls | Gets a list of available commands given the users perm level
 * -c  | Gets the result for a specific command
  */
-func help(session *dsg.Session, message *dsg.Message) {
+func botcfg(session *dsg.Session, message *dsg.Message) {
 	msg := strings.Split(message.Content, " ")
 	if len(msg) <= 1 {
-		h := "Help Page Found:\n```" + Cmd["help"].Name + "\n" + Cmd["help"].Help + "```"
-		session.ChannelMessageSend(message.ChannelID, h)
+		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("You need to provide a valid operator. Please use `%vhelp botcfg` for info.", f.Config.Prefix))
 		return
 	}
 
 	flagsParsed := flags.Parse(msg)
 
-	// These are some cop-out variables so I don't nest to eternity.
 	if len(flagsParsed) == 0 {
-		h := "Help Page Found:\n```" + Cmd["help"].Name + "\n" + Cmd["help"].Help + "```"
-		session.ChannelMessageSend(message.ChannelID, h)
+		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("You need to provide a valid operator. Please use `%vhelp botcfg` for info.", f.Config.Prefix))
 		return
 	}
 
