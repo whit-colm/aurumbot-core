@@ -1,16 +1,47 @@
 #!/bin/bash
 
+# a 300+ line bodge.
+
 # The one line of code that gets updated.
 au_latestversion="https://github.com/aurumbot/core/archive/v1.0.0-beta.4.zip"
 
-#_start() {}
-#_stop() {}
-#_index() {}
+_start() {
+  n=`grep -n "NAME=\"$1\"," $HOME/.aurumfile | cut -f1 -d":"`
+  if [ ! -e `tmux has-session -t aurum` ] ; then 
+}
+
+_stop() {
+  n=`grep -n "NAME=\"$1\"," $HOME/.aurumfile | cut -f1 -d":"`
+  if [ -e "$n" ] ; then echo "$1 not found." ; exit 1 ; fi
+  s=`sed -n 6p aurumfile | sed "s/.*TMUX=\"\(.*\)\"/\1/"`
+  if [ -e `tmux has-session -t aurum` ] ; then
+    sed -i'.original' "${n}s|TMUX=\".*\"|TMUX=\"-1\"|" $HOME/.aurumfile ; rm $HOME/.aurumfile.original
+    tmux new-session -d -t aurum
+  fi
+  
+  if [ -1 -eq "$s" ] ; then echo "$1 is not running." ; exit 1 ; fi
+  sed -i'.original' "${n}s|TMUX=\".*\"|TMUX=\"-1\"|" $HOME/.aurumfile ; rm $HOME/.aurumfile.original
+}
+
+_index() {
+  n=`grep -n "NAME=\"$1\"," $HOME/.aurumfile | cut -f1 -d":"`
+  if [ ! -z "$n" ] ; then
+    echo "it appears that $1 already exists:\n`sed -n ${n}p $HOME/.aurumfile`"
+    echo "would you like to overwrite it?"
+    read -e -p "[y/N] " answer
+    case "$answer" in
+      [yY]*) sed -i'.original' "${n}s|PATH=\".*\",|PATH=\"$2\",|" $HOME/.aurumfile ; rm $HOME/.aurumfile.original;;
+      *) echo "Exiting Program" ; exit 0 ;;
+    esac
+  else
+    cat "NAME=\"$au_name\",PATH=\"$au_path\",TMUX=\"-1\"" >> $HOME/.aurumfiles
+  fi
+}
 
 _init() {
   echo "You will be guided through the process of installing aurum's dependancies."
-  printf "Install? [Y/n]\n"
-  read -e -p "> " answer
+  echo "Install?"
+  read -e -p "[Y/n] " answer
 
   if [[ "$answer" = "no" ]] | [[ "$answer" = "n" ]] ; then
     echo "Quitting program"
@@ -117,11 +148,23 @@ _install() {
   read -e -p "> " au_name
   au_name=`echo "$au_name" | sed -e 's/ /_/g'`
   echo "Name set ($au_name)"
-  echo "Where weould you like to setup the bot? (leave blank for current directory)"
+  echo "Where would you like to setup the bot? (leave blank for current directory)"
   read -e -p "> " au_path
-  if [[ $au_path = "" ]] ; then
+  if [ -e "$au_path" ] ; then
     au_path=`pwd`
   fi
+  if [ -d $au_path/$au_name ] ; then
+    echo "It appears the path $au_path/$au_name already exists. Would you like to overwrite it?"
+    read -e -p "[y/N]: " answer
+    case "$answer" in
+      [yY]*) rm -rf $au_path/$au_name ;;
+      *) echo "Exiting Program" ; exit 0 ;;
+    esac
+  else
+    mkdir $au_path/$au_name
+  fi
+  _index $au_name $au_path/$au_name
+
   echo "Setting up directory heirarchy in ${au_path}/${au_name}."
   mkdir ${au_path}/${au_name}
   cd ${au_path}/${au_name}
@@ -204,10 +247,11 @@ _help() {
 
 #---------------------------------
 
-if [[ "$1" = "init" ]] ; then
-  _init
-elif [[ "$1" = "install" ]] ; then
-  _install
-else
-  _help
-fi
+case "$1" in
+  "init") _init ;;
+  "install") _install ;;
+  "start") _start ;;
+  "stop") _stop ;; 
+  "index") _index ;;
+  *) _help ;;
+esac
