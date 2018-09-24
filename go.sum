@@ -1,5 +1,15 @@
 github.com/aurumbot/flags v1.0.1-beta.1.0.20180921121654-97713540d01f h1:GIXTyUnzXQFbaXqM/1d+y5frPiTWXNCbo13Fstlhv4w=
 github.com/aurumbot/flags v1.0.1-beta.1.0.20180921121654-97713540d01f/go.mod h1:GL/p72gRpH3OVFO/yMRkDoMdrndsizeQCzxNeNHg958=
+github.com/aurumbot/flags v1.0.1-beta.1.0.20180924011634-2fcf5bbc29d4 h1:UStKwXSgbUtgaOBae0bDIchiHTphE/Ho/E9D9iEjzTc=
+github.com/aurumbot/flags v1.0.1-beta.1.0.20180924011634-2fcf5bbc29d4/go.mod h1:GL/p72gRpH3OVFO/yMRkDoMdrndsizeQCzxNeNHg958=
+github.com/aurumbot/flags v1.0.1-beta.1.0.20180924011833-f10d1e7233a5 h1:6Xo6FNuahLYgMSQWwLwyeabYN8ILLcxaP8vYwnpXsvo=
+github.com/aurumbot/flags v1.0.1-beta.1.0.20180924011833-f10d1e7233a5/go.mod h1:GL/p72gRpH3OVFO/yMRkDoMdrndsizeQCzxNeNHg958=
+github.com/aurumbot/flags v1.0.1-beta.1.0.20180924011900-c271a45638f8 h1:vGeQYDKzgbw4rYZSD5/bq8nFnc3rMxuEpkdPhVw1Gf8=
+github.com/aurumbot/flags v1.0.1-beta.1.0.20180924011900-c271a45638f8/go.mod h1:GL/p72gRpH3OVFO/yMRkDoMdrndsizeQCzxNeNHg958=
+github.com/aurumbot/flags v1.0.1-beta.1.0.20180924012615-070d47fab124 h1:AradgBTu1/vwjqMn90MQSq8m9td5el+cECktGwcTtFA=
+github.com/aurumbot/flags v1.0.1-beta.1.0.20180924012615-070d47fab124/go.mod h1:GL/p72gRpH3OVFO/yMRkDoMdrndsizeQCzxNeNHg958=
+github.com/aurumbot/flags v1.0.1 h1:E0G/hPvRYWsYhucHSXA7QThgaEiqsPxlFI0cGk5byjs=
+github.com/aurumbot/flags v1.0.1/go.mod h1:GL/p72gRpH3OVFO/yMRkDoMdrndsizeQCzxNeNHg958=
 github.com/aurumbot/lib v1.0.0-beta.1 h1:tMZToXq1M2oGBNVnTM3PtltgL+f5lCzA2iwJSS/+6JU=
 github.com/aurumbot/lib v1.0.0-beta.1/go.mod h1:13UHB9Z4X2zC5DHXAmw896seZlmVc914PdqRFq4nRBY=
 github.com/bwmarrin/discordgo v0.18.0 h1:XopVQXCIFy7Cr2eT7NcYcm4k0l2PYX+AP5RUbIWX2/8=
