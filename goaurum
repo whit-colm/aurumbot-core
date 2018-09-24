@@ -7,11 +7,11 @@ au_latestversion="v1.0.0-beta.4"
 
 _start() {
   if [ -z `grep "NAME=\"$1\"" $HOME/.aurumfile` ] ; then echo "$1 not found." ; exit 1 ; fi
-  pid=`ps -eo "pid,ucomm" | grep "[0-9]\s$1" | perl -pe 's/^[\s]+//g' | perl -pe 's/[\s].+//g'`
+  pid=`ps -eo "pid,ucomm" | grep "[0-9]\s.$1" | perl -pe 's/^[\s]+//g' | perl -pe 's/[\s].+//g'`
   if [ ! -z $pid ] ; then echo "$1 appears to be already running at $pid." ; exit 0 ; fi
   path=`grep "NAME=\"$1\"" $HOME/.aurumfile | perl -pe "s/^NAME=\"$1\":PATH=\"|\"$//g"`
   cd $path
-  nohup .$1 &
+  nohup ./.$1 &
   if [ $? -ne 0 ] ; then echo "Failed to start up $1" ; else echo "Started up $1." ; fi
   cd -
 }
@@ -183,7 +183,6 @@ _install() {
   _index $au_name $au_path/$au_name
 
   echo "Setting up directory heirarchy in ${au_path}/${au_name}."
-  cd ${au_path}/${au_name}
   mkdir plugins dat dat/logs dat/cfg dat/cfg/aurum
   touch ./dat/cfg/aurum/preferences.json
   echo "Heirarchy created."
