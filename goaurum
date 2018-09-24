@@ -3,7 +3,7 @@
 # a 300+ line bodge.
 
 # The one line of code that gets updated.
-au_latestversion="v1.0.0-beta.4"
+au_latestversion="v1.0.0"
 
 _start() {
   if [ -z `grep "NAME=\"$1\"" $HOME/.aurumfile` ] ; then echo "$1 not found." ; exit 1 ; fi
