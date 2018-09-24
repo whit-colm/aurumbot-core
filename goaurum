@@ -9,8 +9,9 @@ _start() {
   if [ -e `grep "NAME=\"$1\"" $HOME/.aurumfile` ] ; then echo "$1 not found." ; exit 1 ; fi
   pid=`ps -eo "pid,ucomm" | grep "[0-9]\s$1" | perl -pe 's/^[\s]+//g' | perl -pe 's/[\s].+//g'`
   if [ ! -e $pid ] ; then echo "$1 appears to be already running at $pid." ; exit 0 ; fi
-  path=`grep "NAME=\"$1\"" aurumfile | perl -pe "s/^NAME=\"$1\":PATH=\"|\"$//g"`
-  nohup $path/.$1 2&>1 &
+  path=`grep "NAME=\"$1\"" $HOME/.aurumfile | perl -pe "s/^NAME=\"$1\":PATH=\"|\"$//g"`
+  cd $path
+  nohup .$1 &
   echo "Started up $1."
 }
 
@@ -25,31 +26,31 @@ _stop() {
 
 _index() {
   n=`grep "NAME=\"$1\":" $HOME/.aurumfile`
-  if [ ! -e "$n" ] ; then
+  if [ ! -e $n ] ; then
     echo "it appears that $1 already exists."
     echo "would you like to overwrite it?"
     read -e -p "[y/N] " answer
     case "$answer" in
-      [yY]*) perl -pi.original -e "s#NAME=\"$1\":PATH=\".*\"#NAME=\"$1\":PATH=\"$2\"#g" aurumfile ; rm aurumfile.original ;;
+      [yY]*) perl -pi.original -e "s#NAME=\"$1\":PATH=\".*\"#NAME=\"$1\":PATH=\"$2\"#g" $HOME/.aurumfile ; rm $HOME/.aurumfile.original ;;
       *) echo "Exiting Program" ; exit 0 ;;
     esac
     echo "Overwrote $1. PATH=$2."
   else
-    cat "NAME=\"$1\":PATH=\"$2\"" >> $HOME/.aurumfiles
+    echo "NAME=\"$1\":PATH=\"$2\"" >> $HOME/.aurumfile
   fi
 }
 
 _remove() {
   read -e -p "Preparing to remove $1. Are you sure?\n[y/N] " answer
   case $1 in 
-    [yY]*) perl -pi.bck -e "s/^NAME=\"$1\":PATH=\".*\"$//g" aurumfile ; rm aurumfile.bck;;
+    [yY]*) perl -pi.bck -e "s/^NAME=\"$1\":PATH=\".*\"$//g" $HOME/.aurumfile ; rm $HOME/.aurumfile.bck;;
     *) echo "Exiting Program" ; exit 0 ;;
   esac
   echo "Successfully removed $1 from the database."
 }
 
 _list() {
-  name=`grep "^NAME=\".*\"" aurumfile | perl -pe "s/^NAME=\"|\":PATH=\".*\"$//g" ; printf "\n"`
+  name=`grep "^NAME=\".*\"" $HOME/.aurumfile | perl -pe "s/^NAME=\"|\":PATH=\".*\"$//g" ; printf "\n"`
   echo $name
   exit 0
 }
@@ -164,19 +165,18 @@ _install() {
   read -e -p "> " au_name
   au_name=`echo "$au_name" | perl -pe 's/ /_/g'`
   echo "Name set ($au_name)"
-  echo "Where would you like to setup the bot? (leave blank for current directory)"
+  echo "Where would you like to setup the bot? (use ./ for current directory)"
   read -e -p "> " au_path
-  if [ -e "$au_path" ] ; then
-    au_path=`pwd`
-  fi
   if [ -d $au_path/$au_name ] ; then
     echo "It appears the path $au_path/$au_name already exists. Would you like to overwrite it?"
     read -e -p "[y/N]: " answer
     case "$answer" in
-      [yY]*) rm -rf $au_path/$au_name ;;
+      [yY]*) rm -rf $au_path/$au_name ; mkdir $au_path/$au_name ;  ;;
       *) echo "Exiting Program" ; exit 0 ;;
     esac
   else
+    cd $au_path
+    if [ "$?" -ne 0 ] ; then echo "You need to first create $au_path." ; exit 1 ; fi
     mkdir $au_path/$au_name
   fi
   _index $au_name $au_path/$au_name
@@ -200,8 +200,6 @@ _install() {
   else
     echo "You don't appear to have git. how does that work?"
   fi
-    rm -rf ./.tmp
-    cd - > 2&>1
     mv ./.tmp/main.go ./
     mv ./.tmp/README.md ./
     mv ./.tmp/go.mod ./ 
@@ -239,12 +237,10 @@ JsonEnd
   rm main.go
   rm -rf ./.tmp
   echo "installing $au_name"
-  touch $HOME/.aurumfiles
-  cat ""
 
   echo "$au_name successfully installed Use the link below to put it on your server."
   echo "https://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot"
-  cd - > 2&>1
+  cd -
 }
 
 _help() {
@@ -267,9 +263,9 @@ touch $HOME/.aurumfile
 case "$1" in
   "init") _init ;;
   "install") _install ;;
-  "start") _start $1 ;;
-  "stop") _stop $1 ;; 
+  "start") _start $2 ;;
+  "stop") _stop $2 ;; 
   "list") _list ;;
-  "index") _index $1 $2 ;;
+  "index") _index $2 $3 ;;
   *) _help ;;
 esac
