@@ -1,0 +1,7 @@
+# This is an example .aurumfile, it contains all the info needed for aurum to
+# keep track of where all its instances are stored. This is meant to be stored
+# in $HOME/.aurumfiles. Each line looks like this:
+# NAME="$BOTNAME",PATH="/absolute/path/to/bot/elf",TMUX="$TMUX_WINDOW"
+# if $TMUX_WINOW is -1, that means the assosiated $BOTNAME is not running
+NAME="pyrabot",PATH="/home/someuser/bots/pyrabot",TMUX="-1"
+NAME="mechonis",PATH="/home/someuser/bots/mechonis",TMUX="-1"

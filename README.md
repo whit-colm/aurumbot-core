@@ -13,7 +13,7 @@ Aurum is a framework for creating and hosting your own custom discord bot with e
 
 ## Installing and Running Aurum and its plugins
 
-[Please see the wiki](https://github.com/aurumbot/core/wiki) for details.
+Please see the [wiki](https://github.com/aurumbot/core/wiki) for details.
 
 ## Contributing to the Project
 

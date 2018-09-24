@@ -18,7 +18,8 @@ Flags:
 -c --command <command>	: get help for the specific <command>
 -ls --list		: get a list of all available commands
 Usage : ` + f.Config.Prefix + `help -c <command>
-	` + f.Config.Prefix + `help -ls`,
+	` + f.Config.Prefix + `help -ls
+Powered by Aurum at https://github.com/aurumbot/core`,
 		Perms:   -1,
 		Version: "v2.1.0β",
 		Action:  help,

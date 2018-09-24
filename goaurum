@@ -1,12 +1,63 @@
 #!/bin/bash
 
+# a 300+ line bodge.
+
 # The one line of code that gets updated.
 au_latestversion="https://github.com/aurumbot/core/archive/v1.0.0-beta.4.zip"
 
+_start() {
+  if [ -e `grep "NAME=\"$1\"" $HOME/.aurumfile` ] ; then echo "$1 not found." ; exit 1 ; fi
+  pid=`ps -eo "pid,ucomm" | grep "[0-9]\s$1" | perl -pe 's/^[\s]+//g' | perl -pe 's/[\s].+//g'`
+  if [ ! -e $pid ] ; then echo "$1 appears to be already running at $pid." ; exit 0 ; fi
+  path=`grep "NAME=\"$1\"" aurumfile | perl -pe "s/^NAME=\"$1\":PATH=\"|\"$//g"`
+  nohup $path/.$1 2&>1 &
+  echo "Started up $1."
+}
+
+_stop() {
+  if [ -e `grep "NAME=\"$1\"" $HOME/.aurumfile` ] ; then echo "$1 not found." ; exit 1 ; fi
+  pid=`ps -eo "pid,ucomm" | grep "[0-9]\s$1" | perl -pe 's/^[\s]+//g' | perl -pe 's/[\s].+//g'`
+  if [ -e $pid ] ; then echo "$1 is not running." ; exit 1 ; fi
+  kill -9 $pid
+  if [ "$?" -ne "0" ] ; then echo "An error code $? was encountered when attempting to kill the bot."; exit 1 ; fi
+  exit 0
+}
+
+_index() {
+  n=`grep "NAME=\"$1\":" $HOME/.aurumfile`
+  if [ ! -e "$n" ] ; then
+    echo "it appears that $1 already exists."
+    echo "would you like to overwrite it?"
+    read -e -p "[y/N] " answer
+    case "$answer" in
+      [yY]*) perl -pi.original -e "s#NAME=\"$1\":PATH=\".*\"#NAME=\"$1\":PATH=\"$2\"#g" aurumfile ; rm aurumfile.original ;;
+      *) echo "Exiting Program" ; exit 0 ;;
+    esac
+    echo "Overwrote $1. PATH=$2."
+  else
+    cat "NAME=\"$1\":PATH=\"$2\"" >> $HOME/.aurumfiles
+  fi
+}
+
+_remove() {
+  read -e -p "Preparing to remove $1. Are you sure?\n[y/N] " answer
+  case $1 in 
+    [yY]*) perl -pi.bck -e "s/^NAME=\"$1\":PATH=\".*\"$//g" aurumfile ; rm aurumfile.bck;;
+    *) echo "Exiting Program" ; exit 0 ;;
+  esac
+  echo "Successfully removed $1 from the database."
+}
+
+_list() {
+  name=`grep "^NAME=\".*\"" aurumfile | perl -pe "s/^NAME=\"|\":PATH=\".*\"$//g" ; printf "\n"`
+  echo $name
+  exit 0
+}
+
 _init() {
   echo "You will be guided through the process of installing aurum's dependancies."
-  printf "Install? [Y/n]\n"
-  read -e -p "> " answer
+  echo "Install?"
+  read -e -p "[Y/n] " answer
 
   if [[ "$answer" = "no" ]] | [[ "$answer" = "n" ]] ; then
     echo "Quitting program"
@@ -27,8 +78,8 @@ _init() {
       echo "installing golang"
       brew install go
     fi
-    if [[ `which tmux` = "" ]] ; then
-      echo "installing tmux"
+    if [[ `which perl` = "" ]] ; then
+      echo "installing perl"
       brew install tmux
     fi
   else
@@ -38,8 +89,8 @@ _init() {
       if [[ `which git` = "" ]] ; then
         sudo apt install git
       fi
-      if [[ `which git` = "tmux" ]] ; then
-        sudo apt install tmux
+      if [[ `which git` = "perl" ]] ; then
+        sudo apt install perl
       fi
       if [[ `which wget` = "" ]] & [[ `which curl` = "" ]] ; then
         sudo apt install wget
@@ -48,8 +99,8 @@ _init() {
       if [[ `which git` = "" ]] ; then
         pacman -S git
       fi
-      if [[ `which git` = "tmux" ]] ; then
-        pacman -S tmux
+      if [[ `which perl` = "perl" ]] ; then
+        pacman -S perl
       fi
       if [[ `which wget` = "" ]] & [[ `which curl` = "" ]] ; then
         pacman -S wget
@@ -58,8 +109,8 @@ _init() {
       if [[ `which git` = "" ]] ; then
         pkg install git
       fi
-      if [[ `which git` = "tmux" ]] ; then
-        pkg install tmux
+      if [[ -e `which perl` ]] ; then
+        pkg install perl
       fi
       if [[ `which wget` = "" ]] & [[ `which curl` = "" ]] ; then
         pkg install wget
@@ -68,8 +119,8 @@ _init() {
       if [[ `which git` = "" ]] ; then
         yum install git
       fi
-      if [[ `which git` = "tmux" ]] ; then
-        yum install tmux
+      if [[ `which perl` = "" ]] ; then
+        yum install perl
       fi
       if [[ `which wget` = "" ]] & [[ `which curl` = "" ]] ; then
         yum install wget
@@ -77,9 +128,9 @@ _init() {
     else
       echo "Your package manager could not be found. Please make sure you have:"
       echo "● git"
-      echo "● tmux"
+      echo "● perl"
       echo "● wget or curl"
-      if [[ `which wget` = "" ]] | [[ `which curl` = "" ]] & [[ `which git` = "" ]] & [[ `which tmux` = "" ]] ; then
+      if [[ `which wget` = "" ]] | [[ `which curl` = "" ]] & [[ `which git` = "" ]] & [[ `which perl` = "" ]] ; then
         exit 1
       fi
     fi
@@ -111,15 +162,26 @@ _install() {
   echo "You will be guided through the steps to create a new aurum instance."
   echo "What would you like to name the bot?"
   read -e -p "> " au_name
-  au_name=`echo "$au_name" | sed -e 's/ /_/g'`
+  au_name=`echo "$au_name" | perl -pe 's/ /_/g'`
   echo "Name set ($au_name)"
-  echo "Where weould you like to setup the bot? (leave blank for current directory)"
+  echo "Where would you like to setup the bot? (leave blank for current directory)"
   read -e -p "> " au_path
-  if [[ $au_path = "" ]] ; then
+  if [ -e "$au_path" ] ; then
     au_path=`pwd`
   fi
+  if [ -d $au_path/$au_name ] ; then
+    echo "It appears the path $au_path/$au_name already exists. Would you like to overwrite it?"
+    read -e -p "[y/N]: " answer
+    case "$answer" in
+      [yY]*) rm -rf $au_path/$au_name ;;
+      *) echo "Exiting Program" ; exit 0 ;;
+    esac
+  else
+    mkdir $au_path/$au_name
+  fi
+  _index $au_name $au_path/$au_name
+
   echo "Setting up directory heirarchy in ${au_path}/${au_name}."
-  mkdir ${au_path}/${au_name}
   cd ${au_path}/${au_name}
   mkdir plugins dat dat/logs dat/cfg dat/cfg/aurum
   touch dat/cfg/aurum/preferences.json
@@ -133,7 +195,7 @@ _install() {
   echo "Prefrences set."
   echo "Fetching most recent version of aurum"
   mkdir ./.tmp
-  if [[ `which git` != "" ]] ; then
+  if [ -e `which git` ] ; then
     git clone https://github.com/aurumbot/core.git ./.tmp/
   else
     echo "You don't appear to have git. how does that work?"
@@ -150,7 +212,7 @@ _install() {
     echo "aurum/core downloaded. fetching dependencies and compiling."
     export PATH=$PATH:/usr/local/go/bin
     env CGO_ENABLED=0 GO111MODULE=on go build ./...
-    env CGO_ENABLED=0 GO111MODULE=on go build -v -o $au_name main.go
+    env CGO_ENABLED=0 GO111MODULE=on go build -v -o .$au_name main.go
     echo "$au_name has been compiled. Finishing up."
     # I'm sorry.
 
@@ -177,6 +239,10 @@ JsonEnd
   rm go.sum
   rm main.go
   rm -rf ./.tmp
+  echo "installing $au_name"
+  touch $HOME/.aurumfiles
+  cat ""
+
   echo "$au_name successfully installed Use the link below to put it on your server."
   echo "https://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot"
   cd - > 2&>1
@@ -186,16 +252,25 @@ _help() {
   printf "\033[1;31mUsage: \033[1;33mgoaurum <option>
 \033[0mThe config tool and managment tool for aurum discord bots.
 \n\033[1;31mOptions:
-\033[1;32minit    \033[0mfetch system dependancies (golang, tmux)
-\033[1;32minstall \033[0mcreate an instance of aurum\n"
+\033[1;32minit                \033[0mfetch system dependancies (golang, perl)
+\033[1;32minstall             \033[0mcreate an instance of aurum
+\033[1;32mstart <name>        \033[0mstart the aurum bot called <name>
+\033[1;32mstop <name>         \033[0mstop the aurum bot called <name>
+\033[1;32mlist                \033[0mlist all aurum instances
+\033[1;32mremove <name>       \033[0mremove the bot <name> from the database
+\033[1;32mindex <name> <path> \033[0madd a pre-existing instance of aurum to 
+                    the manager. Also used to fix broken paths.\n"
 }
 
 #---------------------------------
 
-if [[ "$1" = "init" ]] ; then
-  _init
-elif [[ "$1" = "install" ]] ; then
-  _install
-else
-  _help
-fi
+touch $HOME/.aurumfile
+case "$1" in
+  "init") _init ;;
+  "install") _install ;;
+  "start") _start $1 ;;
+  "stop") _stop $1 ;; 
+  "list") _list ;;
+  "index") _index $1 $2 ;;
+  *) _help ;;
+esac
