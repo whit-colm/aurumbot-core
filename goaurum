@@ -202,7 +202,6 @@ _install() {
   fi
     rm -rf ./.tmp
     cd - > 2&>1
-    exit 1
     mv ./.tmp/main.go ./
     mv ./.tmp/README.md ./
     mv ./.tmp/go.mod ./ 
