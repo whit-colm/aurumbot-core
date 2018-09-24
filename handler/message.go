@@ -67,8 +67,7 @@ func MessageCreate(session *dsg.Session, message *dsg.MessageCreate) {
 		return
 	}
 
-	msgSplit := strings.Split(m.Content, " ")
-
+	msgSplit := strings.SplitN(m.Content, " ", 2)
 	// Now the message is run to see if its a valid command and acted upon.
 	for command, action := range Cmd {
 		if msgSplit[0] == command {
@@ -84,6 +83,7 @@ func MessageCreate(session *dsg.Session, message *dsg.MessageCreate) {
 					return
 				}
 			}
+			m.Content = msgSplit[len(msgSplit)-1]
 			action.Action(s, m)
 			return
 		}

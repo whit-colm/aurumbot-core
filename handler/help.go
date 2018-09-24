@@ -6,20 +6,22 @@ import (
 	f "github.com/aurumbot/lib/foundation"
 	dsg "github.com/bwmarrin/discordgo"
 	"sort"
-	"strings"
 	"time"
 )
 
 func init() {
 	Cmd["help"] = &f.Command{
 		Name: "Command Help Page Search",
-		Help: `Info  : The built-in helper to get information about all of the bots commands
-Flags:
--c --command <command>	: get help for the specific <command>
--ls --list		: get a list of all available commands
-Usage : ` + f.Config.Prefix + `help -c <command>
-	` + f.Config.Prefix + `help -ls
-Powered by Aurum at https://github.com/aurumbot/core`,
+		Help: `# Info: 
+The built-in helper to get information about all of the bots commands
+# Flags:
+<none> <command> : get help for the specific <command>
+<-ls|--list>     : get a list of all available commands
+# Usage : 
+` + f.Config.Prefix + `help reloadplugins
+` + f.Config.Prefix + `help -ls
+---
+*Powered by Aurum at https://github.com/aurumbot/core*`,
 		Perms:   -1,
 		Version: "v2.1.0β",
 		Action:  help,
@@ -38,31 +40,22 @@ Powered by Aurum at https://github.com/aurumbot/core`,
 * -c  | Gets the result for a specific command
  */
 func help(session *dsg.Session, message *dsg.Message) {
-	msg := strings.Split(message.Content, " ")
-	if len(msg) <= 1 {
-		h := "Help Page Found:\n```" + Cmd["help"].Name + "\n" + Cmd["help"].Help + "```"
-		session.ChannelMessageSend(message.ChannelID, h)
-		return
-	}
-
-	flagsParsed := flags.Parse(msg)
-
-	// These are some cop-out variables so I don't nest to eternity.
-	if len(flagsParsed) == 0 {
-		h := "Help Page Found:\n```" + Cmd["help"].Name + "\n" + Cmd["help"].Help + "```"
-		session.ChannelMessageSend(message.ChannelID, h)
-		return
-	}
+	flagsParsed := flags.Parse(message.Content)
 
 	for i := range flagsParsed {
-		if flagsParsed[i].Type == flags.Dash && flagsParsed[i].Name == "c" {
+		if flagsParsed[i].Name == "--unflagged" && flagsParsed[i].Value != "" {
 			session.ChannelMessageSend(message.ChannelID, search(flagsParsed[i]))
-		} else if flagsParsed[i].Type == flags.Dash && flagsParsed[i].Name == "ls" {
+			return
+		} else if flagsParsed[i].Name == "-ls" {
 			session.ChannelMessageSend(message.ChannelID, list(session, message))
-		} else if flagsParsed[i].Type == flags.DoubleDash && flagsParsed[i].Name == "command" {
-			session.ChannelMessageSend(message.ChannelID, search(flagsParsed[i]))
+			return
+		} else if flagsParsed[i].Name == "--list" {
+			session.ChannelMessageSend(message.ChannelID, list(session, message))
+			return
 		}
 	}
+	h := "Help Page Found:\n```" + Cmd["help"].Name + "\n" + Cmd["help"].Help + "```"
+	session.ChannelMessageSend(message.ChannelID, h)
 }
 
 func list(session *dsg.Session, message *dsg.Message) string {
@@ -147,7 +140,7 @@ func list(session *dsg.Session, message *dsg.Message) string {
 func search(cmd *flags.Flag) string {
 	for command, action := range Cmd {
 		if cmd.Value == command {
-			help := "Help Page Found:\n**" + action.Name + "**\n```" + action.Help + "\nVersion: " + action.Version + "```"
+			help := "**__" + action.Name + "__**\n```markdown\n" + action.Help + "\nVersion: " + action.Version + "```"
 			return help
 		}
 	}

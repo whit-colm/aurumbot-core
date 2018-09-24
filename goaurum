@@ -80,7 +80,7 @@ _init() {
     fi
     if [[ `which perl` = "" ]] ; then
       echo "installing perl"
-      brew install tmux
+      brew install perl
     fi
   else
     echo "installing core dependencies"
