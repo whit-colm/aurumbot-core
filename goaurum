@@ -209,8 +209,8 @@ _install() {
     mv ./.tmp/LICENSE ./
     echo "aurum/core downloaded. fetching dependencies and compiling."
     export PATH=$PATH:/usr/local/go/bin
-    env CGO_ENABLED=0 GO111MODULE=on go build ./...
-    env CGO_ENABLED=0 GO111MODULE=on go build -v -o .$au_name main.go
+    env CGO_ENABLED=1 GO111MODULE=on go build ./...
+    env CGO_ENABLED=1 GO111MODULE=on go build -v -o .$au_name main.go
     echo "$au_name has been compiled. Finishing up."
     # I'm sorry.
 
