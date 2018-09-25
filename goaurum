@@ -180,7 +180,9 @@ _install() {
     mkdir -p $au_path/$au_name
     cd $au_path/$au_name
   fi
-  _index $au_name $au_path/$au_name
+  cd $au_path
+  _index $au_name `pwd`/$au_name
+  cd -
 
   echo "Setting up directory heirarchy in ${au_path}/${au_name}."
   mkdir plugins dat dat/logs dat/cfg dat/cfg/aurum
