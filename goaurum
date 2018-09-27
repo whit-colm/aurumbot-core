@@ -76,6 +76,10 @@ _init() {
       echo "installing homebrew."
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
+    if [[ `which greadlink` = "" ]] ; then
+      echo "installing coreutils"
+      brew install coreutils
+    fi
     if [[ `which go` = "" ]] ; then
       echo "installing golang"
       brew install go
@@ -169,9 +173,13 @@ _install() {
   echo "Name set ($au_name)"
   echo "Where would you like to setup the bot? (use ./ for current directory)"
   read -e -p "> " au_path
-  au_path=`dirname $au_path/$au_name | perl -pe 's!/$!!g'`
+  if [ "$OS" = "Darwin" ] ; then
+    au_path=`greadlink -f $au_path | perl -pe 's!/$!!g'`
+  else
+    au_path=`readlink -f $au_path | perl -pe 's!/$!!g'`
+  fi
   if [ -d $au_path/$au_name ] ; then
-    echo "It appear/Volumes/MCBackup s the path $au_path/$au_name already exists. Would you like to overwrite it?"
+    echo "It appears the path $au_path/$au_name already exists. Would you like to overwrite it?"
     read -e -p "[y/N]: " answer
     case "$answer" in
       [yY]*) rm -rf $au_path/$au_name ; mkdir -p $au_path/$au_name ; cd $au_path/$au_name ;;
