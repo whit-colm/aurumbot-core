@@ -169,9 +169,9 @@ _install() {
   echo "Name set ($au_name)"
   echo "Where would you like to setup the bot? (use ./ for current directory)"
   read -e -p "> " au_path
-  au_path=`readlink -f $au_path | perl -pe 's!/$!!g'`
+  au_path=`dirname $au_path/$au_name | perl -pe 's!/$!!g'`
   if [ -d $au_path/$au_name ] ; then
-    echo "It appears the path $au_path/$au_name already exists. Would you like to overwrite it?"
+    echo "It appear/Volumes/MCBackup s the path $au_path/$au_name already exists. Would you like to overwrite it?"
     read -e -p "[y/N]: " answer
     case "$answer" in
       [yY]*) rm -rf $au_path/$au_name ; mkdir -p $au_path/$au_name ; cd $au_path/$au_name ;;
