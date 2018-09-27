@@ -28,7 +28,7 @@ _stop() {
 _index() {
   n=`grep "NAME=\"$1\"" $HOME/.aurumfile`
   if [ ! -z $n ] ; then
-    echo "it appears that $1 already exists."
+    echo "it appears that $1 already exists within the aurumfile manager."
     echo "would you like to overwrite it?"
     read -e -p "[y/N] " answer
     case "$answer" in
@@ -169,6 +169,7 @@ _install() {
   echo "Name set ($au_name)"
   echo "Where would you like to setup the bot? (use ./ for current directory)"
   read -e -p "> " au_path
+  au_path=`readlink -f $au_path | perl -pe 's!/$!!g'`
   if [ -d $au_path/$au_name ] ; then
     echo "It appears the path $au_path/$au_name already exists. Would you like to overwrite it?"
     read -e -p "[y/N]: " answer
@@ -180,8 +181,7 @@ _install() {
     mkdir -p $au_path/$au_name
     cd $au_path/$au_name
   fi
-  _index $au_name `readlink -f $au_path`/$au_name
-  cd -
+  _index $au_name $au_path/$au_name
 
   echo "Setting up directory heirarchy in ${au_path}/${au_name}."
   mkdir plugins dat dat/logs dat/cfg dat/cfg/aurum
