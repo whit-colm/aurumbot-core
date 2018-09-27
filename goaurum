@@ -180,8 +180,7 @@ _install() {
     mkdir -p $au_path/$au_name
     cd $au_path/$au_name
   fi
-  cd $au_path
-  _index $au_name `pwd`/$au_name
+  _index $au_name `readlink -f $au_path`/$au_name
   cd -
 
   echo "Setting up directory heirarchy in ${au_path}/${au_name}."
