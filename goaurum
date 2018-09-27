@@ -247,9 +247,10 @@ JsonEnd
   rm main.go
   rm -rf ./.tmp
   echo "installing $au_name"
-  echo "$au_name successfully installed Use the link below to put it on your server."
-  echo "https://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot"
-  cd -
+  printf "\033[1;31m$au_name successfully installed! Use the link below to put it on your server.\n"
+  printf "\033[0;36mhttps://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot\n"
+  printf "\033[0mTo start the bot, use \033[0;36mgoaurum start $au_name\033[0m\n"
+  cd - >> /dev/null
 }
 
 _help() {
