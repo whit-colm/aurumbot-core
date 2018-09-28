@@ -8,7 +8,8 @@ _start() {
   if [ ! -z $pid ] ; then echo "$1 appears to be already running at $pid." ; exit 0 ; fi
   path=`grep "NAME=\"$1\"" $HOME/.aurumfile | perl -pe "s/^NAME=\"$1\":PATH=\"|\"$//g"`
   cd $path
-  nohup ./.$1 &
+  rm './dat/logs/nohup.out' >> /dev/null 2>&1
+  nohup ./.$1 >./dat/logs/nohup.out 2>&1 &
   if [ $? -ne 0 ] ; then echo "Failed to start up $1" ; else echo "Started up $1." ; fi
   cd -
 }
