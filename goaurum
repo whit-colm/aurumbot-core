@@ -56,19 +56,20 @@ _update() {
     git clone https://github.com/aurumbot/core.git
   fi
   if [ "$1" = "--goaurum" ] ; then
-    mkdir auupdate ; chmod +x auupdate
+    touch auupdate ; chmod +x auupdate
     cat > auupdate << EOF
 #!/bin/bash
 sleep 5
 rm /usr/local/bin/goaurum
-mv ./goaurum /usr/local/bin/goaurum
+mv ./core/goaurum /usr/local/bin/
 chmod +x /usr/local/bin/goaurum
+/usr/local/bin/goaurum goaurumupdatefinalize
 EOF
-  echo "Preparing to update goaurum. Note that this may take a bit"
-  echo "It also appears to stop the updater, this is normal. Please wait for"
-  echo "a short while (30 seconds?) for it to update, then try goaurum again."
-  ./auupdate &
-  exit 0
+    echo "Preparing to update goaurum. Note that this may take a bit"
+    echo "It also appears to stop the updater, this is normal. Please wait for"
+    echo "a short while (30 seconds?) for it to update, then try goaurum again."
+    ./auupdate & >> /dev/null 2>&1
+    exit 0
   fi
   path=`grep "NAME=\"$1\"" $HOME/.aurumfile | perl -pe "s/^NAME=\"$1\":PATH=\"|\"$//g"`
   if [ -z "$path" ] ; then
@@ -84,6 +85,21 @@ EOF
 _goaurumupdatefinalize() {
   rm -rf $HOME/.autmp > /dev/null 2>&1
   echo "Updates installed! (I hope)"
+}
+
+_installplugin() {
+  cd $2
+  path=`grep "NAME=\"$1\"" $HOME/.aurumfile | perl -pe "s/^NAME=\"$1\":PATH=\"|\"$//g"`
+  ./build
+  if [ $? -ne 0 ] ; then exit 1 ; fi
+  pluginname=`ls ./bin | perl -pe "s/\.so$//g"`
+  mv ./bin/* $path/plugins/
+  if [ -d ./json ] ; then
+    mkdir $path/dat/cfg/$pluginname
+    mv ./json/* $path/dat/cfg/$pluginname
+  fi
+  echo "Compiled and installed plugin to $1."
+  cd - >> /dev/null
 }
 
 _list() {
@@ -293,17 +309,18 @@ _help() {
   printf "\033[1;31mUsage: \033[1;33mgoaurum <option>
 \033[0mThe config tool and managment tool for aurum discord bots.
 \n\033[1;31mOptions:
-\033[1;32minit                   \033[0mfetch system dependancies (golang, perl)
-\033[1;32minstall                \033[0mcreate an instance of aurum
-\033[1;32mstart <name>           \033[0mstart the aurum bot called <name>
-\033[1;32mstop <name>            \033[0mstop the aurum bot called <name>
-\033[1;32mlist                   \033[0mlist all aurum instances
-\033[1;32mremove <name>          \033[0mremove the bot <name> from the database
-\033[1;32mindex <name> <path>    \033[0madd a pre-existing instance of aurum to 
-                       the manager. Also used to fix broken paths.
-\033[1;32mupdate <bot> [version] \033[0mupdate the <bot> to version [version]. 
-                       use -goaurum to update the goaurum file, leave [version]
-                       blank for the most recent version.\n"
+\033[1;32minit                        \033[0mfetch system dependancies (golang, perl)
+\033[1;32minstall                     \033[0mcreate an instance of aurum
+\033[1;32mstart <name>                \033[0mstart the aurum bot called <name>
+\033[1;32mstop <name>                 \033[0mstop the aurum bot called <name>
+\033[1;32minstallplugin <name> <path> \033[0minstall a plugin at <path> to the <name> bot.
+\033[1;32mlist                        \033[0mlist all aurum instances
+\033[1;32mremove <name>               \033[0mremove the bot <name> from the database
+\033[1;32mindex <name> <path>         \033[0madd a pre-existing instance of aurum to 
+                            the manager. Also used to fix broken paths.
+\033[1;32mupdate <bot> [version]      \033[0mupdate the <bot> to version [version]. 
+                            use --goaurum to update goaurum, leave [version]
+                            blank for the most recent version.\n"
 }
 
 #---------------------------------
@@ -322,5 +339,7 @@ case "$1" in
   "list") _list ;;
   "index") _index $2 $3 ;;
   "update") _update $2 $3 ;;
+  "installplugin") _installplugin $2 $3 ;;
+  "goaurumupdatefinalize") _goaurumupdatefinalize ;;
   *) _help ;;
 esac
