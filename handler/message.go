@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"github.com/aurumbot/lib/dat"
 	f "github.com/aurumbot/lib/foundation"
 	dsg "github.com/bwmarrin/discordgo"
