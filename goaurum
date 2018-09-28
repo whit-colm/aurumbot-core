@@ -25,7 +25,7 @@ _stop() {
 _index() {
   n=`grep "NAME=\"$1\"" $HOME/.aurumfile`
   if [ ! -z $n ] ; then
-    echo "it appears that $1 already exists."
+    echo "it appears that $1 already exists within the aurumfile manager."
     echo "would you like to overwrite it?"
     read -e -p "[y/N] " answer
     case "$answer" in
@@ -111,6 +111,10 @@ _init() {
     if [[ `which brew` = "" ]] ; then
       echo "installing homebrew."
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    fi
+    if [[ `which greadlink` = "" ]] ; then
+      echo "installing coreutils"
+      brew install coreutils
     fi
     if [[ `which go` = "" ]] ; then
       echo "installing golang"
@@ -205,6 +209,11 @@ _install() {
   echo "Name set ($au_name)"
   echo "Where would you like to setup the bot? (use ./ for current directory)"
   read -e -p "> " au_path
+  if [ "$OS" = "Darwin" ] ; then
+    au_path=`greadlink -f $au_path | perl -pe 's!/$!!g'`
+  else
+    au_path=`readlink -f $au_path | perl -pe 's!/$!!g'`
+  fi
   if [ -d $au_path/$au_name ] ; then
     echo "It appears the path $au_path/$au_name already exists. Would you like to overwrite it?"
     read -e -p "[y/N]: " answer
@@ -245,8 +254,8 @@ _install() {
     mv ./.tmp/LICENSE ./
     echo "aurum/core downloaded. fetching dependencies and compiling."
     export PATH=$PATH:/usr/local/go/bin
-    env CGO_ENABLED=0 GO111MODULE=on go build ./...
-    env CGO_ENABLED=0 GO111MODULE=on go build -v -o .$au_name main.go
+    env CGO_ENABLED=1 GO111MODULE=on go build ./...
+    env CGO_ENABLED=1 GO111MODULE=on go build -v -o .$au_name main.go
     echo "$au_name has been compiled. Finishing up."
     # I'm sorry.
 
@@ -274,9 +283,10 @@ EOF
   rm main.go
   rm -rf ./.tmp
   echo "installing $au_name"
-  echo "$au_name successfully installed Use the link below to put it on your server."
-  echo "https://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot"
-  cd -
+  printf "\033[1;31m$au_name successfully installed! Use the link below to put it on your server.\n"
+  printf "\033[0;36mhttps://discordapp.com/api/oauth2/authorize?client_id=${au_cid}&permissions=8&scope=bot\n"
+  printf "\033[0mTo start the bot, use \033[0;36mgoaurum start $au_name\033[0m\n"
+  cd - >> /dev/null
 }
 
 _help() {

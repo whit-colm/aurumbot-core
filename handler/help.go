@@ -23,7 +23,7 @@ The built-in helper to get information about all of the bots commands
 ---
 *Powered by Aurum at https://github.com/aurumbot/core*`,
 		Perms:   -1,
-		Version: "v2.1.0β",
+		Version: "v1.0.0",
 		Action:  help,
 	}
 }
