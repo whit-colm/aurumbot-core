@@ -49,6 +49,10 @@ _remove() {
 }
 
 _update() {
+  if [ "$EUID" -ne 0 ]
+    echo "Goaurum's updater needs to run as root. Please use sudo."
+    exit 1
+  fi
   mkdir $HOME/.autmp
   cd $HOME/.autmp
   if [ ! -z "$2" ] ; then
@@ -80,6 +84,7 @@ EOF
   _stop $1 > /dev/null 2>&1
   rm $path/.$1
   env CGO_ENABLED=1 GO111MODULE=on go build -o $path/.$1 ./main.go
+  rm -rf $HOME/.autmp
   if [ "$?" -ne "0" ] ; then exit 1 ; else echo "Successfully updated $1." ; fi
 }
 
