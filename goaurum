@@ -49,7 +49,7 @@ _remove() {
 }
 
 _update() {
-  if [ "$EUID" -ne 0 ]
+  if [ "$EUID" -ne 0 ] ; then
     echo "Goaurum's updater needs to run as root. Please use sudo."
     exit 1
   fi
