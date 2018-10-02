@@ -9,7 +9,7 @@ _start() {
   path=`grep "NAME=\"$1\"" $HOME/.aurumfile | perl -pe "s/^NAME=\"$1\":PATH=\"|\"$//g"`
   cd $path
   rm './dat/logs/nohup.out' >> /dev/null 2>&1
-  nohup ./.$1 >./dat/logs/nohup.out 2>&1 &
+  nohup ./.$1 $path >./dat/logs/nohup.out 2>&1 &
   if [ $? -ne 0 ] ; then echo "Failed to start up $1" ; else echo "Started up $1." ; fi
   cd -
 }
@@ -100,9 +100,9 @@ _installplugin() {
   if [ $? -ne 0 ] ; then exit 1 ; fi
   pluginname=`ls ./bin | perl -pe "s/\.so$//g"`
   mv ./bin/* $path/plugins/
-  if [ -d ./json ] ; then
+  if [ -d ./dat ] ; then
     mkdir $path/dat/cfg/$pluginname
-    mv ./json/* $path/dat/cfg/$pluginname
+    mv ./dat/* $path/dat/cfg/$pluginname/
   fi
   echo "Compiled and installed plugin to $1."
   cd - >> /dev/null

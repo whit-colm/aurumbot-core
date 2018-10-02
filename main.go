@@ -12,6 +12,10 @@ import (
 
 var bot *f.Bot
 
+func init() {
+	dat.SetPath(os.Args[1])
+}
+
 func main() {
 	runBot()
 	// And the main should end here. so what to do about this?
