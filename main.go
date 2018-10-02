@@ -45,7 +45,7 @@ func runBot() {
 	f.Session = dg
 	f.Config = *bot
 	dat.Log.Println("Loading Plugins")
-	err = handler.ReloadPlugins()
+	err = cmd.ReloadPlugins()
 	if err != nil {
 		dat.Log.Fatalln(err)
 	} else {
