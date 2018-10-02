@@ -44,6 +44,13 @@ func runBot() {
 	}
 	f.Session = dg
 	f.Config = *bot
+	dat.Log.Println("Loading Plugins")
+	err = handler.ReloadPlugins()
+	if err != nil {
+		dat.Log.Fatalln(err)
+	} else {
+		dat.Log.Println("Successfully loaded plugins")
+	}
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
