@@ -13,7 +13,9 @@ import (
 var bot *f.Bot
 
 func init() {
-	dat.SetPath(os.Args[1])
+	if len(os.Args) <= 2 {
+		dat.SetPath(os.Args[1])
+	}
 }
 
 func main() {
