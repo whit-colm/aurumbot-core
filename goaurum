@@ -9,7 +9,7 @@ _start() {
   path=`grep "NAME=\"$1\"" $HOME/.aurumfile | perl -pe "s/^NAME=\"$1\":PATH=\"|\"$//g"`
   cd $path
   rm './dat/logs/nohup.out' >> /dev/null 2>&1
-  nohup ./.$1 >./dat/logs/nohup.out 2>&1 &
+  nohup ./.$1 $path >./dat/logs/nohup.out 2>&1 &
   if [ $? -ne 0 ] ; then echo "Failed to start up $1" ; else echo "Started up $1." ; fi
   cd -
 }
@@ -49,6 +49,10 @@ _remove() {
 }
 
 _update() {
+  if [ "$EUID" -ne 0 ] ; then
+    echo "Goaurum's updater needs to run as root. Please use sudo."
+    exit 1
+  fi
   mkdir $HOME/.autmp
   cd $HOME/.autmp
   if [ ! -z "$2" ] ; then
@@ -80,6 +84,7 @@ EOF
   _stop $1 > /dev/null 2>&1
   rm $path/.$1
   env CGO_ENABLED=1 GO111MODULE=on go build -o $path/.$1 ./main.go
+  rm -rf $HOME/.autmp
   if [ "$?" -ne "0" ] ; then exit 1 ; else echo "Successfully updated $1." ; fi
 }
 
@@ -95,9 +100,9 @@ _installplugin() {
   if [ $? -ne 0 ] ; then exit 1 ; fi
   pluginname=`ls ./bin | perl -pe "s/\.so$//g"`
   mv ./bin/* $path/plugins/
-  if [ -d ./json ] ; then
+  if [ -d ./dat ] ; then
     mkdir $path/dat/cfg/$pluginname
-    mv ./json/* $path/dat/cfg/$pluginname
+    mv ./dat/* $path/dat/cfg/$pluginname/
   fi
   echo "Compiled and installed plugin to $1."
   cd - >> /dev/null
@@ -258,7 +263,7 @@ _install() {
   echo "Fetching most recent version of aurum"
   mkdir ./.tmp
   if [ ! -z `which git` ] ; then
-    git clone --branch $au_latestversion https://github.com/aurumbot/core.git ./.tmp/
+    git clone https://github.com/aurumbot/core.git ./.tmp/
     if [ "$?" -ne "0" ] ; then echo "Error $? encountered when cloning latest version. Panicing." ; exit 1 ; fi
   else
     echo "You don't appear to have git. how does that work?" ; exit 1

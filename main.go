@@ -12,6 +12,12 @@ import (
 
 var bot *f.Bot
 
+func init() {
+	if len(os.Args) <= 2 {
+		dat.SetPath(os.Args[1])
+	}
+}
+
 func main() {
 	runBot()
 	// And the main should end here. so what to do about this?
@@ -44,6 +50,13 @@ func runBot() {
 	}
 	f.Session = dg
 	f.Config = *bot
+	dat.Log.Println("Loading Plugins")
+	err = cmd.ReloadPlugins()
+	if err != nil {
+		dat.Log.Fatalln(err)
+	} else {
+		dat.Log.Println("Successfully loaded plugins")
+	}
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)

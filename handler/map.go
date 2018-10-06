@@ -26,9 +26,9 @@ func init() {
 		Name:    "Reload bot plugins",
 		Help:    "Reloads plugins from the ./plugin directory.",
 		Perms:   dsg.PermissionAdministrator,
-		Version: "1.0.0α",
+		Version: "1.0.0",
 		Action: func(session *dsg.Session, message *dsg.Message) {
-			err := reloadPlugins()
+			err := ReloadPlugins()
 			if err != nil {
 				dat.AlertDiscord(session, message, err)
 			} else {
@@ -36,13 +36,9 @@ func init() {
 			}
 		},
 	}
-	err := reloadPlugins()
-	if err != nil {
-		dat.Log.Println(err)
-	}
 }
 
-func reloadPlugins() error {
+func ReloadPlugins() error {
 	var files []string
 	// A painfully complex `ls`
 	filesUnchecked, err := ioutil.ReadDir("./plugins/")
