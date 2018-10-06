@@ -14,6 +14,10 @@ github.com/aurumbot/lib v1.0.0-beta.1 h1:tMZToXq1M2oGBNVnTM3PtltgL+f5lCzA2iwJSS/
 github.com/aurumbot/lib v1.0.0-beta.1/go.mod h1:13UHB9Z4X2zC5DHXAmw896seZlmVc914PdqRFq4nRBY=
 github.com/aurumbot/lib v1.0.0-beta.1.0.20181002162019-1991551cc917 h1:EWDj1SJYyyQMefCnwPm2Fj6LCOiKguCAtv7S8rZScDo=
 github.com/aurumbot/lib v1.0.0-beta.1.0.20181002162019-1991551cc917/go.mod h1:13UHB9Z4X2zC5DHXAmw896seZlmVc914PdqRFq4nRBY=
+github.com/aurumbot/lib v1.0.0-beta.1.0.20181004164731-d270fcb69cb7 h1:R2K7DSI+59mcAHU1ODs20jHNwHflVNas4F1egazVxcQ=
+github.com/aurumbot/lib v1.0.0-beta.1.0.20181004164731-d270fcb69cb7/go.mod h1:13UHB9Z4X2zC5DHXAmw896seZlmVc914PdqRFq4nRBY=
+github.com/aurumbot/lib v1.0.0-beta.1.0.20181006163334-2d7df8930704 h1:+P1Y06bzY80ZdFMrzIrm1N5x0g+r5jZGmOKTHSIjEUg=
+github.com/aurumbot/lib v1.0.0-beta.1.0.20181006163334-2d7df8930704/go.mod h1:13UHB9Z4X2zC5DHXAmw896seZlmVc914PdqRFq4nRBY=
 github.com/bwmarrin/discordgo v0.18.0 h1:XopVQXCIFy7Cr2eT7NcYcm4k0l2PYX+AP5RUbIWX2/8=
 github.com/bwmarrin/discordgo v0.18.0/go.mod h1:5NIvFv5Z7HddYuXbuQegZ684DleQaCFqChP2iuBivJ8=
 github.com/gorilla/websocket v1.4.0 h1:WDFjx/TMzVgy9VdMMQi2K2Emtwi2QcUQsztZ/zLaH/Q=
