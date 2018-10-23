@@ -1,0 +1,47 @@
+@font-face {
+    font-family: 'Menlo';
+    src: url('Menlo-Bold.eot');
+    src: local('Menlo Bold'), local('Menlo-Bold'),
+        url('Menlo-Bold.eot?#iefix') format('embedded-opentype'),
+        url('Menlo-Bold.woff2') format('woff2'),
+        url('Menlo-Bold.woff') format('woff'),
+        url('Menlo-Bold.svg#Menlo-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Menlo';
+    src: url('Menlo-Italic.eot');
+    src: local('Menlo Italic'), local('Menlo-Italic'),
+        url('Menlo-Italic.eot?#iefix') format('embedded-opentype'),
+        url('Menlo-Italic.woff2') format('woff2'),
+        url('Menlo-Italic.woff') format('woff'),
+        url('Menlo-Italic.svg#Menlo-Italic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Menlo';
+    src: url('Menlo-BoldItalic.eot');
+    src: local('Menlo Bold Italic'), local('Menlo-BoldItalic'),
+        url('Menlo-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('Menlo-BoldItalic.woff2') format('woff2'),
+        url('Menlo-BoldItalic.woff') format('woff'),
+        url('Menlo-BoldItalic.svg#Menlo-BoldItalic') format('svg');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Menlo';
+    src: url('Menlo-Regular.eot');
+    src: local('Menlo Regular'), local('Menlo-Regular'),
+        url('Menlo-Regular.eot?#iefix') format('embedded-opentype'),
+        url('Menlo-Regular.woff2') format('woff2'),
+        url('Menlo-Regular.woff') format('woff'),
+        url('Menlo-Regular.svg#Menlo-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
